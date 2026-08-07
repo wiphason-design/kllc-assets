@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KLLC AV Asset Platform — ระบบครุภัณฑ์ + สำรวจ</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sarabun@5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sarabun@5/700.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<style>
+  :root{--bg:#0f172a;--panel:#1e293b;--line:#334155;--txt:#e2e8f0;--mut:#94a3b8;--blue:#38bdf8;--green:#22c55e;--amber:#f59e0b;--red:#ef4444}
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Sarabun','Segoe UI',Tahoma,sans-serif}
+  body{background:var(--bg);color:var(--txt);padding:20px;max-width:1280px;margin:0 auto}
+  h1{font-size:22px} h1 span{color:var(--blue)}
+  .sub{color:var(--mut);font-size:13px;margin:4px 0 16px;line-height:1.6}
+  nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .tab{background:var(--panel);color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:8px 16px;font-size:13px;cursor:pointer}
+  .tab.active{background:var(--blue);color:#0f172a;font-weight:700;border-color:var(--blue)}
+  section.hidden{display:none}
+  .panel{background:var(--panel);border-radius:14px;padding:18px;margin-bottom:16px}
+  .panel h2{font-size:16px;margin-bottom:12px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+  .card{background:var(--panel);border-radius:12px;padding:14px;border-left:4px solid var(--line)}
+  .card .num{font-size:24px;font-weight:700} .card .lbl{font-size:12px;color:var(--mut)}
+  .b-blue{border-color:var(--blue)} .b-green{border-color:var(--green)} .b-amber{border-color:var(--amber)} .b-red{border-color:var(--red)} .b-gray{border-color:#64748b}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600}
+  .badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;white-space:nowrap}
+  .bar{background:var(--line);border-radius:99px;height:8px;overflow:hidden;min-width:110px}
+  .bar i{display:block;height:100%}
+  input,select{background:#0f172a;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:9px;font-size:13px}
+  button.primary{background:var(--amber);color:#0f172a;font-weight:700;border:none;border-radius:8px;padding:9px 16px;cursor:pointer;font-size:13px}
+  button.primary:hover{background:#fbbf24}
+  button.ghost{background:transparent;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px}
+  button.ghost:hover{border-color:var(--blue);color:var(--blue)}
+  button.danger{background:transparent;border:1px solid var(--red);color:var(--red);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:12px}
+  .form-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px}
+  .room{background:#0f172a;border-radius:12px;padding:13px;cursor:pointer;border:2px solid transparent}
+  .room.sel{border-color:var(--blue)}
+  .room .code{color:var(--blue);font-size:12px}
+  .dots span{display:inline-block;width:10px;height:10px;border-radius:50%}
+  .lineBubble{background:#eaffea;color:#123;border-radius:14px;padding:14px;font-size:13px;white-space:pre-line;max-width:480px}
+  #proposalDoc,#checkReport{background:#fff;color:#111;border-radius:8px;padding:34px;line-height:1.9;font-size:15px}
+  #proposalDoc th,#proposalDoc td,#checkReport th,#checkReport td{border:1px solid #555;color:#111;padding:6px 8px;font-size:13px}
+  #proposalDoc th,#checkReport th{background:#eee;color:#111}
+  #checkReport{display:none}
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#052e16;font-weight:700;padding:10px 22px;border-radius:99px;opacity:0;transition:.3s;z-index:99}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .insight{background:#0f172a;border-left:4px solid var(--blue);border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.9}
+  .scroll{max-height:520px;overflow:auto}
+  .closedTag{font-size:10px;background:#78350f;color:#fcd34d;padding:1px 7px;border-radius:99px}
+  .mut{color:var(--mut);font-size:12px}
+  .modalOverlay{position:fixed;inset:0;background:rgba(2,6,23,.8);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+  .modalBox{max-width:560px;width:100%;max-height:92vh;overflow:auto;background:var(--panel);border-radius:14px;padding:20px;border:1px solid var(--line)}
+  .form-col{display:flex;flex-direction:column;gap:9px}
+  .form-col>label{font-size:12px;color:var(--mut)}
+  .form-row2{display:flex;gap:8px;flex-wrap:wrap}
+  .form-row2>div{flex:1;min-width:105px;display:flex;flex-direction:column;gap:4px}
+  .form-row2 label{font-size:12px;color:var(--mut)}
+  .form-row2 input{width:100%}
+  #scanRegion{width:100%;max-width:380px;margin:0 auto}
+  #scanRegion video{border-radius:10px}
+  .label{display:inline-block;border:1px dashed #999;border-radius:8px;padding:10px;margin:5px;width:190px;text-align:center;background:#fff;color:#111;vertical-align:top;page-break-inside:avoid}
+  .label .lname{font-size:12px;font-weight:700;margin-top:6px}
+  .label .lcode{font-size:10px;color:#333;word-break:break-all}
+  .label .lroom{font-size:10px;color:#666}
+  .scanTip{background:#0f172a;border-radius:8px;padding:10px;font-size:12px;color:var(--mut);line-height:1.7;margin-top:10px}
+  @media print{
+    body *{visibility:hidden}
+    #proposalDoc,#proposalDoc *{visibility:visible}
+    #proposalDoc{position:absolute;left:0;top:0;width:100%;border-radius:0}
+    body.printCheck #proposalDoc{display:none}
+    body.printCheck #checkReport{display:block}
+    body.printCheck #checkReport,body.printCheck #checkReport *{visibility:visible}
+    body.printCheck #checkReport{position:absolute;left:0;top:0;width:100%}
+    body.printLabel #proposalDoc{display:none}
+    body.printLabel #labelSheet,body.printLabel #labelSheet *{visibility:visible}
+    body.printLabel #labelSheet{position:absolute;left:0;top:0;width:100%;background:#fff}
+  }
+</style>
+</head>
+<body>
+
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+  <h1>🎬 KLLC AV Asset Platform <span>• ระบบครุภัณฑ์ + สำรวจ</span></h1>
+  <button class="ghost" id="adminBtn" onclick="adminClick()">🔐 เข้าระบบแอดมิน</button>
+</div>
+<div class="sub">สำนักการเรียนรู้ตลอดชีวิตฯ สจล. (KLLC) • ฝ่ายเทคโนโลยีและพื้นที่การเรียนรู้ • แอดมิน: คุณวิภาส (wiphas.on@kmitl.ac.th)<br>ข้อมูลจากแบบสำรวจ งปม. 2569 • รองรับสแกน QR เลขครุภัณฑ์เพื่อสำรวจ + พิมพ์เลขด้วยมือ</div>
+
+<div class="panel" id="loginPanel" style="display:none">
+  <h2>🔐 เข้าระบบแอดมิน</h2>
+  <div class="form-row">
+    <input type="password" id="pinInput" placeholder="ใส่รหัส PIN" maxlength="10">
+    <button class="primary" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <span class="mut">PIN เริ่มต้นคือ 1234</span>
+  </div>
+</div>
+
+<nav>
+  <button class="tab active" data-tab="overview">📊 ภาพรวม</button>
+  <button class="tab" data-tab="checklist">📋 งานประจำวัน</button>
+  <button class="tab" data-tab="repair">🛠 ซ่อม vs เปลี่ยน</button>
+  <button class="tab" data-tab="rooms">🏫 รายห้อง</button>
+  <button class="tab" data-tab="assets">⚙️ จัดการครุภัณฑ์</button>
+  <button class="tab" data-tab="proposal">📄 ของบประมาณ</button>
+  <button class="tab" data-tab="alerts">🔔 แจ้งเตือน</button>
+</nav>
+
+<section id="tab-overview">
+  <div class="cards" id="statCards"></div>
+  <div class="panel"><h2>📊 พยากรณ์งบประมาณทดแทนรายปี (พ.ศ.)</h2><canvas id="forecastChart" height="90"></canvas></div>
+  <div class="panel"><h2>🚨 อันดับความเสี่ยงที่ควรจัดการก่อน</h2>
+    <div class="scroll"><table><thead><tr><th>ครุภัณฑ์</th><th>ห้อง</th><th>ปีที่ซื้อ</th><th>อายุ</th><th>จำนวน</th><th>ราคา/หน่วย</th></tr></thead><tbody id="riskBody"></tbody></table></div>
+  </div>
+  <div class="panel"><h2>💡 ข้อสังเกตสำหรับผู้บริหาร</h2><div class="insight" id="insightBox"></div></div>
+</section>
+
+<section id="tab-checklist" class="hidden">
+  <div class="panel">
+    <h2>📋 Checklist งาน Routine — เลือกวันที่</h2>
+    <div class="form-row">
+      <input type="date" id="checkDate" onchange="renderChecklist()">
+      <button class="ghost" onclick="goToday()">วันนี้</button>
+      <button class="primary" onclick="printCheckReport()">🖨 พิมพ์ใบส่งมอบงาน</button>
+    </div>
+    <div style="background:var(--line);border-radius:99px;height:12px;overflow:hidden"><i id="checkProg" style="display:block;height:100%;width:0;background:var(--green);transition:.2s"></i></div>
+    <div class="mut" id="checkText" style="margin-top:8px"></div>
+  </div>
+  <div class="panel">
+    <h2>งานที่ต้องทำในวันที่เลือก</h2>
+    <div class="scroll"><table><thead><tr><th style="width:40px">✓</th><th>งาน</th><th>เวลา</th><th>ความถี่</th><th style="min-width:200px">บันทึก / หมายเหตุ</th></tr></thead><tbody id="checkBody"></tbody></table></div>
+  </div>
+  <div class="panel" id="taskAdminPanel" style="display:none">
+    <h2>⚙️ จัดการงาน Routine (เฉพาะแอดมิน)</h2>
+    <form id="taskForm" class="form-row">
+      <input type="text" id="tName" placeholder="ชื่องาน *" required style="flex:1;min-width:200px">
+      <select id="tFreq" onchange="freqChanged()">
+        <option value="daily">ทุกวัน</option><option value="weekly">รายสัปดาห์</option><option value="monthly">รายเดือน</option>
+      </select>
+      <select id="tDow" style="display:none">
+        <option value="0">วันอาทิตย์</option><option value="1">วันจันทร์</option><option value="2">วันอังคาร</option>
+        <option value="3">วันพุธ</option><option value="4">วันพฤหัสบดี</option><option value="5">วันศุกร์</option><option value="6">วันเสาร์</option>
+      </select>
+      <select id="tDom" style="display:none">
+        <option value="1">วันที่ 1</option><option value="5">วันที่ 5</option><option value="10">วันที่ 10</option>
+        <option value="15">วันที่ 15</option><option value="20">วันที่ 20</option><option value="25">วันที่ 25</option>
+        <option value="28">วันที่ 28</option><option value="31">วันที่ 31</option>
+      </select>
+      <input type="time" id="tTime">
+      <input type="text" id="tArea" placeholder="พื้นที่" style="width:160px">
+      <button class="primary" type="submit" id="btnSubmitTask">เพิ่มงาน</button>
+      <button class="ghost" type="button" id="btnCancelTask" style="display:none" onclick="cancelTaskEdit()">ยกเลิก</button>
+    </form>
+    <div class="scroll"><table><thead><tr><th>งาน</th><th>ความถี่</th><th>เวลา</th><th>พื้นที่</th><th>จัดการ</th></tr></thead><tbody id="taskAdminBody"></tbody></table></div>
+    <div class="form-row" style="margin-top:14px">
+      <span>🔑 เปลี่ยน PIN:</span>
+      <input type="password" id="newPin" placeholder="PIN ใหม่ (อย่างน้อย 4 หลัก)">
+      <button class="ghost" onclick="changePin()">บันทึก PIN</button>
+    </div>
+  </div>
+</section>
+
+<section id="tab-repair" class="hidden">
+  <div class="panel"><h2>➕ บันทึกค่าซ่อมบำรุง</h2>
+    <form id="logForm" class="form-row">
+      <select id="logAsset" required style="flex:2;min-width:230px"></select>
+      <input type="date" id="logDate" required>
+      <input type="number" id="logCost" placeholder="ค่าซ่อม (บาท)" min="0" required style="width:140px">
+      <input type="text" id="logNote" placeholder="รายละเอียด" style="flex:1;min-width:160px">
+      <button class="primary" type="submit">บันทึก</button>
+    </form>
+  </div>
+  <div class="panel"><h2>🛠 ซ่อมต่อ หรือ ซื้อใหม่ดี? &nbsp;<span class="mut">(ค่าซ่อมสะสม ≥ 60% → ควรซื้อใหม่)</span></h2>
+    <div class="scroll"><table><thead><tr><th>ครุภัณฑ์</th><th>ห้อง</th><th>ค่าซ่อมสะสม</th><th>ความคุ้มค่า</th><th>คำแนะนำ</th></tr></thead><tbody id="repairBody"></tbody></table></div>
+  </div>
+  <div class="panel"><h2>🧾 ประวัติการซ่อมล่าสุด</h2>
+    <table><thead><tr><th>วันที่</th><th>ครุภัณฑ์</th><th>ค่าใช้จ่าย</th><th>รายละเอียด</th></tr></thead><tbody id="logBody"></tbody></table>
+  </div>
+</section>
+
+<section id="tab-rooms" class="hidden">
+  <div class="panel"><h2>🏫 การ์ดสุขภาพครุภัณฑ์รายห้อง (คลิกเพื่อดูรายละเอียด)</h2><div class="grid" id="roomGrid"></div></div>
+  <div class="panel"><h2 id="roomDetailTitle"></h2>
+    <div class="form-row">
+      <button class="ghost" onclick="openScanner('survey')">📷 สแกนสำรวจสภาพ</button>
+      <span class="mut">ยิง QR / พิมพ์เลข ที่ตัวครุภัณฑ์ แล้วกดตั้งสถานะได้ทันที</span>
+    </div>
+    <div class="scroll"><table><thead><tr><th>เลขครุภัณฑ์</th><th>รายการ</th><th>ปีที่ซื้อ</th><th>อายุ</th><th>สภาพ</th><th>สำรวจล่าสุด</th><th>จำนวน</th><th>จัดการ</th></tr></thead><tbody id="roomDetailBody"></tbody></table></div>
+  </div>
+  <div class="panel" id="roomAdminPanel" style="display:none">
+    <h2>⚙️ จัดการห้อง / จุดติดตั้ง (เฉพาะแอดมิน)</h2>
+    <form id="roomForm" class="form-row">
+      <input id="rCode" placeholder="รหัส (เช่น AV28)" style="width:130px">
+      <input id="rName" placeholder="ชื่อห้อง *" required style="flex:1;min-width:170px">
+      <input id="rB" placeholder="อาคาร" style="width:80px">
+      <input id="rF" placeholder="ชั้น" style="width:70px">
+      <input id="rY" type="number" placeholder="พ.ศ. สำรวจ" style="width:110px">
+      <label class="mut"><input type="checkbox" id="rClosed" style="width:auto"> ปิดปรับปรุง</label>
+      <button class="primary" type="submit" id="btnSubmitRoom">เพิ่มห้อง</button>
+      <button class="ghost" type="button" id="btnCancelRoom" style="display:none" onclick="cancelRoomEdit()">ยกเลิก</button>
+    </form>
+    <div class="scroll"><table><thead><tr><th>รหัส</th><th>ห้อง</th><th>อาคาร/ชั้น</th><th>สำรวจปี</th><th>สถานะ</th><th>ครุภัณฑ์</th><th>จัดการ</th></tr></thead><tbody id="roomAdminBody"></tbody></table></div>
+  </div>
+</section>
+
+<section id="tab-assets" class="hidden">
+  <div class="panel">
+    <div class="form-row">
+      <button class="primary" onclick="openAddAsset('')">➕ เพิ่มครุภัณฑ์</button>
+      <button class="ghost" onclick="openScanner('edit')">📷 สแกนเพื่อค้นหา / แก้ไข</button>
+      <button class="ghost" onclick="openScanner('survey')">📷 สแกนสำรวจสภาพ</button>
+      <button class="ghost" onclick="printFilteredLabels()">🏷 พิมพ์ QR ของรายการที่กรองอยู่</button>
+    </div>
+    <div id="assetLockNote" class="mut">🔐 โหมดดูอย่างเดียว — เข้าระบบแอดมินเพื่อเพิ่ม/แก้ไข/ลบ</div>
+  </div>
+  <div class="panel"><h2>📦 ครุภัณฑ์ทั้งหมด (<span id="assetCount"></span> รายการ • <span id="unitCount"></span> ชิ้น) &nbsp;
+    <input type="text" id="searchBox" placeholder="🔍 ค้นหา / เลขครุภัณฑ์" style="width:240px" oninput="renderAssets()"> &nbsp;
+    <select id="filterBox" onchange="renderAssets()">
+      <option value="">ทุกสถานะ</option>
+      <option value="old">เกินอายุ</option><option value="mid">ปานกลาง</option><option value="new">ใหม่</option>
+      <option value="unknown">ไม่ทราบปี</option><option value="เสีย">ใช้งานไม่ได้</option><option value="ซ่อม">ส่งซ่อม</option>
+      <option value="unsurveyed">ยังไม่สำรวจ</option><option value="nocode">ไม่มีเลขครุภัณฑ์</option>
+    </select></h2>
+    <div class="scroll"><table><thead><tr><th>เลขครุภัณฑ์</th><th>รายการ</th><th>ห้อง</th><th>ปีที่ซื้อ</th><th>อายุ</th><th>สภาพ</th><th>สำรวจล่าสุด</th><th>จำนวน</th><th>จัดการ</th></tr></thead><tbody id="assetBody"></tbody></table></div>
+  </div>
+  <div class="panel"><h2>💾 สำรองข้อมูล</h2>
+    <div class="form-row">
+      <button class="ghost" onclick="exportData()">⬇️ ส่งออกไฟล์สำรอง (JSON)</button>
+      <button class="ghost" onclick="document.getElementById('importFile').click()">⬆️ นำเข้าไฟล์สำรอง</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      <button class="ghost" onclick="exportCsv()">📄 ส่งออก CSV</button>
+      <button class="danger" id="btnReset" style="display:none" onclick="resetData()">♻️ คืนค่าข้อมูลสำรวจ งปม.69</button>
+    </div>
+  </div>
+</section>
+
+<section id="tab-proposal" class="hidden">
+  <div class="panel">
+    <h2>1) เลือกรายการที่จะของบ</h2>
+    <div class="form-row">
+      <button class="ghost" onclick="selectAllProposal(true)">✅ เลือกทั้งหมด</button>
+      <button class="ghost" onclick="selectAllProposal(false)">⬜ ไม่เลือกทั้งหมด</button>
+      <span class="mut">ระบบเสนอเฉพาะ: เกินอายุ + ใช้งานไม่ได้ + ค่าซ่อมสูง</span>
+    </div>
+    <div class="scroll"><table><thead><tr><th></th><th>รายการ</th><th>ห้อง</th><th>จำนวน</th><th>เหตุผล</th><th>รวม</th></tr></thead><tbody id="proposalPick"></tbody></table></div>
+  </div>
+  <div class="panel"><h2>2) เอกสารขออนุมัติงบประมาณ</h2>
+    <button class="primary" onclick="window.print()">🖨 พิมพ์ / บันทึกเป็น PDF</button>
+    <span class="mut" style="margin-left:10px">เลือก "Save as PDF" ในหน้าต่างพิมพ์</span>
+  </div>
+  <div id="proposalDoc"></div>
+</section>
+
+<section id="tab-alerts" class="hidden">
+  <div class="panel"><h2>🔔 ข้อความแจ้งเตือน (ส่งเข้า LINE กลุ่มฝ่ายฯ)</h2>
+    <div class="lineBubble" id="lineMsg"></div><br>
+    <button class="ghost" onclick="copyAlert()">📋 คัดลอกข้อความ</button>
+  </div>
+  <div class="panel"><h2>🚨 ห้องที่ต้องเฝ้าระวัง</h2>
+    <table><thead><tr><th>ห้อง</th><th>เกินอายุ (ชิ้น)</th><th>งบเปลี่ยนใหม่โดยประมาณ</th></tr></thead><tbody id="alertBody"></tbody></table>
+  </div>
+</section>
+
+<!-- ===== Modal เพิ่ม/แก้ไขครุภัณฑ์ ===== -->
+<div id="assetModal" class="modalOverlay" style="display:none">
+  <div class="modalBox">
+    <h2 id="assetModalTitle" style="margin-bottom:12px">➕ เพิ่มครุภัณฑ์ใหม่</h2>
+    <div class="form-col">
+      <label>ชื่อครุภัณฑ์ *</label>
+      <input id="mName" placeholder="เช่น เครื่องฉายโปรเจคเตอร์ SONY">
+      <label>เลขครุภัณฑ์ (สแกนหรือพิมพ์ได้)</label>
+      <div style="display:flex;gap:6px">
+        <input id="mCode" placeholder="เช่น 57สห990000451116000-05(2)" style="flex:1">
+        <button class="ghost" type="button" onclick="openScanner('fill')">📷 สแกน</button>
+      </div>
+      <label>ห้อง / จุดติดตั้ง</label>
+      <select id="mRoom"></select>
+      <div class="form-row2">
+        <div><label>พ.ศ. ที่ซื้อ</label><input id="mYear" type="number" min="2500" max="2599" placeholder="เช่น 2557"></div>
+        <div><label>จำนวน</label><input id="mQty" type="number" min="1" value="1"></div>
+        <div><label>ราคา/หน่วย (บาท)</label><input id="mPrice" type="number" min="0" placeholder="ว่าง=ประมาณเอง"></div>
+      </div>
+      <label>สภาพ / สถานะ</label>
+      <select id="mStatus">
+        <option value="">ยังไม่สำรวจ</option>
+        <option value="ok">ใช้งานได้</option>
+        <option value="เสีย">ใช้งานไม่ได้</option>
+        <option value="ซ่อม">ส่งซ่อม</option>
+      </select>
+      <label>หมายเหตุ</label>
+      <input id="mNote" placeholder="เช่น จัดซื้อปี 2567, ของห้องสมุด">
+      <div class="mut" id="mSurveyed"></div>
+      <div class="form-row" style="margin-top:12px;margin-bottom:0">
+        <button class="primary" type="button" onclick="saveAssetModal()">💾 บันทึก</button>
+        <button class="ghost" type="button" onclick="closeAssetModal()">ยกเลิก</button>
+        <button class="ghost" type="button" id="mLabelBtn" style="display:none" onclick="showLabelFromModal()">🏷 พิมพ์ QR</button>
+        <button class="danger" type="button" id="mDeleteBtn" style="display:none" onclick="deleteFromModal()">🗑 ลบ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Modal สแกน (กล้อง + พิมพ์มือ + โหมดสำรวจ) ===== -->
+<div id="scanOverlay" class="modalOverlay" style="display:none">
+  <div class="modalBox" style="max-width:460px">
+    <h2 style="margin-bottom:10px">📷 สแกนเลขครุภัณฑ์</h2>
+    <div id="scanRegion"></div>
+    <div class="mut" id="scanStatus" style="text-align:center;margin-top:10px"></div>
+    <div style="display:flex;gap:6px;margin-top:12px">
+      <input id="manualCode" placeholder="หรือพิมพ์เลขครุภัณฑ์ที่นี่" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();manualSubmit();}">
+      <button class="ghost" type="button" onclick="manualSubmit()">🔎 ค้นหา</button>
+    </div>
+    <div id="srBox" style="display:none;margin-top:12px;background:#0f172a;border-radius:10px;padding:12px">
+      <div id="srInfo"></div>
+      <div class="form-row" style="margin-top:10px;margin-bottom:0">
+        <button class="ghost" onclick="srSet('ok')">✅ ใช้งานได้</button>
+        <button class="ghost" onclick="srSet('เสีย')">❌ ใช้งานไม่ได้</button>
+        <button class="ghost" onclick="srSet('ซ่อม')">🔧 ส่งซ่อม</button>
+        <button class="ghost" onclick="srEdit()">✏️ แก้ไข</button>
+      </div>
+      <div style="margin-top:10px"><button class="primary" onclick="scanAgain()">📷 สแกนชิ้นถัดไป</button></div>
+    </div>
+    <div class="scanTip">
+      💡 <b>เคล็ดลับ:</b> เลขครุภัณฑ์มีภาษาไทย ต้องใช้ <b>QR Code</b> (ไม่ใช่บาร์โค้ดแบบขีด) •
+      ถ้ากล้องเปิดไม่ได้ ให้อัปโหลดไฟล์นี้ขึ้น Netlify แล้วเปิดลิงก์บนมือถือ หรือใช้ช่อง "พิมพ์เลข" ด้านบนแทน
+    </div>
+    <div style="margin-top:12px;text-align:right"><button class="ghost" type="button" onclick="stopScanner()">✕ ปิด</button></div>
+  </div>
+</div>
+
+<!-- ===== Modal สติกเกอร์ QR ===== -->
+<div id="labelOverlay" class="modalOverlay" style="display:none">
+  <div class="modalBox" style="max-width:760px">
+    <h2 style="margin-bottom:10px">🏷 สติกเกอร์ QR ครุภัณฑ์</h2>
+    <div class="mut" style="margin-bottom:10px">พิมพ์แล้วตัดไปติดที่ตัวครุภัณฑ์ — จากนั้นใช้ปุ่ม 📷 สแกนสำรวจได้เลย</div>
+    <div id="labelSheet" style="background:#fff;border-radius:8px;padding:10px;max-height:55vh;overflow:auto"></div>
+    <div class="form-row" style="margin-top:12px;margin-bottom:0">
+      <button class="primary" onclick="printLabels()">🖨 พิมพ์สติกเกอร์</button>
+      <button class="ghost" onclick="closeLabels()">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<div id="checkReport"></div>
+<div id="toast"></div>
+
+<script>
+/* ================= ข้อมูลตั้งต้นจากไฟล์สำรวจ งปม. 2569 ================= */
+const STORE_KEY='kllc_survey_scan_v1';
+const DOW=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+
+function yearFromCode(code){
+  if(!code) return null;
+  const c=String(code).replace(/\s/g,'');
+  let m=c.match(/^(\d{2})(สห|สว|สรช|นว)/);
+  if(m) return 2500+Number(m[1]);
+  m=c.match(/^นว(\d{2})/);
+  if(m) return 2500+Number(m[1]);
+  return null;
+}
+function estLife(name){ return /imac|โน้ตบุ๊ก|pc acer|แท็บเล็ต|visualizer|cpu lg/i.test(name)?5:8; }
+function estPrice(name){
+  const n=name;
+  if(/cnc|laser/i.test(n)) return 350000;
+  if(/imac pro/i.test(n)) return 80000;
+  if(/imac/i.test(n)) return 45000;
+  if(/dslr|5d mark/i.test(n)) return 85000;
+  if(/crane/i.test(n)) return 15000;
+  if(/ประชุมทางไกล|video conferen/i.test(n)) return 35000;
+  if(/จอ lg \(video wall\)/i.test(n)) return 35000;
+  if(/cpu lg/i.test(n)) return 12000;
+  if(/75 นิ้ว|75\s*นิ้ว/.test(n)) return 40000;
+  if(/tv ดิจิตอลเคลื่อนที่|65 นิ้ว|65\s*นิ้ว/.test(n)) return 30000;
+  if(/smart tv/i.test(n)) return n.indexOf('55')>-1?18000:25000;
+  if(/ทีวี/.test(n)) return 15000;
+  if(/digital visualizer/i.test(n)) return 25000;
+  if(/โปรเจคเตอร์|projector/i.test(n)) return 30000;
+  if(/กล้องถ่ายทอดสด/.test(n)) return 45000;
+  if(/ชุดสตูดิโอ|ชุดสตูโอ/.test(n)) return 45000;
+  if(/cctv|วงจรปิด/i.test(n)) return n.indexOf('กล้อง')>-1?3500:10000;
+  if(/โน้ตบุ๊ก|โน๊ตบุ๊ค|notebook/i.test(n)) return 25000;
+  if(/pc acer/i.test(n)) return 18000;
+  if(/แท็บเล็ต/.test(n)) return 15000;
+  if(/3d printer/i.test(n)) return 25000;
+  if(/3d resin/i.test(n)) return 8000;
+  if(/3d scanner/i.test(n)) return 60000;
+  if(/prx one/i.test(n)) return 45000;
+  if(/sound craft|soundcraft/i.test(n)) return 25000;
+  if(/มิกเซอร์|mixer/i.test(n)) return 18000;
+  if(/crown/i.test(n)) return 15000;
+  if(/bose/i.test(n)&&/แอมป์/.test(n)) return 12000;
+  if(/bosch/i.test(n)) return 12000;
+  if(/toa|แอมป์/i.test(n)) return 9000;
+  if(/ขยายเสียง/.test(n)) return 9000;
+  if(/ลำโพง bose/i.test(n)) return 15000;
+  if(/ลำโพง jbl/i.test(n)) return 12000;
+  if(/dsx15/i.test(n)) return 12000;
+  if(/monitor/i.test(n)&&/ลำโพง/.test(n)) return 9000;
+  if(/ramsa/i.test(n)) return 7000;
+  if(/แยกเสียง|ทวิตเตอร์/.test(n)) return 3000;
+  if(/ลำโพงเคลื่อนที่/.test(n)) return 12000;
+  if(/ขาตั้งลำโพง/.test(n)) return 1500;
+  if(/ลำโพง/.test(n)) return 8000;
+  if(/ชุดไมโครโฟนไวเลส|ชุดไมค์ไร้สาย/i.test(n)) return 24000;
+  if(/ไมค์ลอย|ไมค์ไร้สาย|shure wireless|mic ไร้สาย|ไมโครโฟนไร้สาย/i.test(n)) return 12000;
+  if(/ไมค์สาย/.test(n)) return 4000;
+  if(/ไมค์ตั้งโต๊ะ|ไมค์โพเดี่ยม|ไมโครโฟนอัดเสียง/.test(n)) return 3000;
+  if(/รับสัญญาณไมค์/.test(n)) return 8000;
+  if(/kramer/i.test(n)) return 8000;
+  if(/hd ?switcher|แยกสัญญาณ/i.test(n)) return 12000;
+  if(/บลูเรย์|ไซเน็ต/.test(n)) return 5000;
+  if(/ตู้แร็ก/.test(n)) return 8000;
+  if(/จอฉาย|^จอ$/.test(n.trim())) return 6000;
+  if(/จอมอนิเตอร์/.test(n)) return 8000;
+  if(/ชุดติดตั้งจอ/.test(n)) return 2500;
+  if(/โพเดี่ยม/.test(n)) return 6000;
+  if(/สำรองไฟ/.test(n)) return 3500;
+  if(/วิทยุสื่อสาร/.test(n)) return 2500;
+  if(/ขาตั้งกล้อง/.test(n)) return 4000;
+  if(/ขาไมค์/.test(n)) return 600;
+  if(/คีย์บอร์ด|คีร์บอร์ด/.test(n)) return 600;
+  if(/เมาส์/.test(n)) return 400;
+  if(/สายสัญญาณ|สาย hdmi|adaptor|รีโมท/i.test(n)) return 500;
+  return 5000;
+}
+
+const SEED_ROOMS=[
+ {id:1, code:'AV01',name:'ห้องประชุมหางนกยูง 100 ที่นั่ง',b:'',f:'1',closed:false,y:null},
+ {id:2, code:'AV02',name:'ห้องฉายภาพยนตร์ 30 ที่นั่ง',b:'',f:'1',closed:false,y:2564},
+ {id:3, code:'AV03',name:'ห้อง 20 ที่นั่ง',b:'',f:'1',closed:false,y:2569},
+ {id:4, code:'AV04',name:'ห้องคอมพิวเตอร์ 1',b:'A',f:'2',closed:true,y:null},
+ {id:5, code:'AV05',name:'ห้องคอมพิวเตอร์ 2',b:'A',f:'2',closed:true,y:null},
+ {id:6, code:'AV06',name:'ห้องคอมพิวเตอร์ 3',b:'A',f:'2',closed:false,y:null},
+ {id:7, code:'AV07',name:'ห้องคอมพิวเตอร์ 4 (iMAC)',b:'A',f:'3',closed:true,y:null},
+ {id:8, code:'AV08',name:'ห้องสัมมนา A201',b:'A',f:'2',closed:true,y:null},
+ {id:9, code:'AV09',name:'ห้องสัมมนา A202',b:'A',f:'2',closed:true,y:null},
+ {id:10,code:'AV10',name:'ห้องสัมมนา A203',b:'A',f:'2',closed:true,y:null},
+ {id:11,code:'AV11',name:'ห้องสัมมนา A204',b:'A',f:'2',closed:true,y:null},
+ {id:12,code:'AV12',name:'ห้องสัมมนา A205',b:'A',f:'2',closed:true,y:null},
+ {id:13,code:'AV13',name:'ชุดเครื่องเสียง 1 (Video Wall A)',b:'B',f:'1',closed:false,y:null},
+ {id:14,code:'AV14',name:'ชุดเครื่องเสียง 2 (Video Wall B)',b:'B',f:'1',closed:false,y:null},
+ {id:15,code:'AV15',name:'Video Wall สีส้ม',b:'B',f:'1',closed:false,y:2564},
+ {id:16,code:'AV16',name:'Video Wall สีม่วง',b:'B',f:'1',closed:false,y:2564},
+ {id:17,code:'AV17',name:'ห้องคาราโอเกะ 1',b:'',f:'1',closed:true,y:null},
+ {id:18,code:'AV18',name:'ห้องคาราโอเกะ 2',b:'',f:'1',closed:true,y:null},
+ {id:19,code:'AV19',name:'ห้องคาราโอเกะ 3',b:'',f:'1',closed:true,y:null},
+ {id:20,code:'AV20',name:'ห้องคาราโอเกะ 4',b:'',f:'1',closed:true,y:null},
+ {id:21,code:'AV21',name:'ห้องประชุม 1 ชั้น 4',b:'A',f:'4',closed:true,y:null},
+ {id:22,code:'AV22',name:'ห้องประชุม 2 ชั้น 4',b:'A',f:'4',closed:true,y:null},
+ {id:23,code:'AV23',name:'ห้องประชุม 3 ชั้น 4',b:'A',f:'4',closed:true,y:null},
+ {id:24,code:'AV24',name:'ระบบ CCTV อาคาร B',b:'B',f:'-',closed:false,y:null},
+ {id:25,code:'AV25',name:'สตูดิโอ & FABLab',b:'',f:'-',closed:false,y:null},
+ {id:26,code:'AV26',name:'ครุภัณฑ์จาก B-TECH',b:'',f:'-',closed:false,y:2564},
+ {id:27,code:'AV27',name:'คลังอุปกรณ์กลาง (โสตฯ อื่นๆ)',b:'',f:'-',closed:false,y:null}
+];
+/* [ห้อง, เลขครุภัณฑ์, ชื่อ, จำนวน, สภาพ, หมายเหตุ] */
+const SEED_RAW=[
+ [1,'57สห990000451116000-05(2)','เครื่องมิกเซอร์ YAMAHA',1],
+ [1,'57สห990000451116000-05(40)','เครื่องช่องสัญญาณ KRAMER',1,'เสีย','ใช้งานไม่ได้'],
+ [1,'57สห990000451116000-05(50)','เครื่องบันทึกวงจรปิด Panasonic',1],
+ [1,'57สห990000451116000-05(49)','เครื่องบลูเรย์ SONY',1],
+ [1,'57สห990000451116000-05(61)','เครื่องรับสัญญาณวงจรปิด',1],
+ [1,'57สห990000451116000-05(1)','เครื่องแอมป์เสียง VXP',1],
+ [1,'57สห990000451116000-05(19)','เครื่องพาวเวอร์แอมป์ Crown XLi800',1],
+ [1,'57สห990000451116000-05(20)','เครื่องพาวเวอร์แอมป์ Crown XLi800',1],
+ [1,'57สห990000451116000-05(47)','KRAMER รับสัญญาณ',1],
+ [1,'57สห990000451116000-05(43)','KRAMER รับสัญญาณ',1],
+ [1,'57สห990000451116000-05(45)','KRAMER รับสัญญาณ',1],
+ [1,'57สห990000451116000-05(48)','KRAMER รับสัญญาณ',1],
+ [1,'57สห990000451116000-03(5)','KRAMER รับสัญญาณ',1],
+ [1,'57สห990000451116000-04(12)','KRAMER รับสัญญาณ',1],
+ [1,'57สห990000451116000-01(38)','KRAMER รับสัญญาณ',1],
+ [1,'57สห990000451116000-05(44)','KRAMER รับสัญญาณ',1],
+ [1,'57สห990000451116000-05(174)','ตู้แร็ก',1],
+ [1,'57สห990000451116000-05(52)','ทีวี SONY',1],
+ [1,'57สห990000451116000-05(53)','ทีวี SONY',1],
+ [1,'57สห990000451116000-05(51)','ตู้ control กล้องวงจรปิด',1],
+ [1,'57สห990000451116000-05(42)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [1,'57สห990000451116000-05(41)','จอ',1],
+ [1,'57สห990000451116000-05(17)','ลำโพง YAMAHA DSX15',1],
+ [1,'57สห990000451116000-05(18)','ลำโพง YAMAHA DSX15',1],
+ [1,'57สห990000451116000-05(16)','ลำโพง YAMAHA DSX15',1],
+ [1,'57สห990000451116000-05(5)','ลำโพง YAMAHA',1],
+ [1,'57สห990000451116000-05(3)','ลำโพง YAMAHA',1],
+ [1,'57สห990000451116000-05(21)','ลำโพง MONITOR YAMAHA',1],
+ [1,'57สห990000451116000-05(22)','ลำโพง MONITOR YAMAHA',1],
+ [1,'57สห990000451116000-05(23)','ตัวรับสัญญาณไมค์ลอย SHURE',1],
+ [1,'57สห990000451116000-05(24)','ตัวรับสัญญาณไมค์ลอย SHURE',1],
+ [1,'57สห990000451116000-05(25)','ตัวรับสัญญาณไมค์ลอย SHURE',1],
+ [1,'57สห990000451116000-05(6)','ลำโพงแยกเสียง YAMAHA',1],
+ [1,'57สห990000451116000-05(7)','ลำโพงแยกเสียง YAMAHA',1],
+ [1,'57สห990000451116000-05(8)','ลำโพงแยกเสียง YAMAHA',1],
+ [1,'57สห990000451116000-05(9)','ลำโพงแยกเสียง YAMAHA',1],
+ [1,'57สห990000451116000-05(10)','ลำโพงแยกเสียง YAMAHA',1],
+ [1,'57สห990000451116000-05(11)','ลำโพงแยกเสียง YAMAHA',1],
+ [1,'57สห990000451116000-05(12)','ลำโพงแยกเสียง YAMAHA',1],
+ [1,'57สห990000451116000-05(13)','ลำโพงแยกเสียง YAMAHA',1],
+ [1,'57สห990000451116000-05(14)','ลำโพงแยกเสียง YAMAHA',1],
+ [1,'57สห990000451116000-05(15)','ลำโพงแยกเสียง YAMAHA',1],
+ [1,'57สห990000451116000-05(179)','ทีวี SAMSUNG',1],
+ [1,'59สห01016496000000-001','ทีวี SAMSUNG',1],
+ [1,'57สห990000451116000-05(172)','โพเดี่ยม',1],
+ [1,'57สห990000451116000-05(173)','ไมค์โพเดี่ยม',1],
+ [1,'67สรช01017181000000-01(1/6)','ไมค์ลอย SHURE',1],
+ [1,'67สรช01017181000000-01(2/6)','ไมค์ลอย SHURE',1],
+ [1,'67สรช01017181000000-04(1/6)','ไมค์ลอย SHURE',1],
+ [1,'67สรช01017181000000-04(2/6)','ไมค์ลอย SHURE',1],
+ [1,'67สรช01017181000000-01(5/6)','ตัวรับสัญญาณไมค์ลอย',1],
+ [1,'67สรช01017181000000-04(5/6)','ตัวรับสัญญาณไมค์ลอย',1],
+ [1,'57สห990000451116000-05(26)','ไมค์สาย SHURE',1],
+ [1,'57สห990000451116000-05(28)','ไมค์สาย SHURE',1],
+ [2,'57สห990004511160000-1(1)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [2,'57สห990004511160000-1(4)','จอ',1],
+ [2,'39สห7730-3-2-27','ทีวี Panasonic',1],
+ [2,'57สห9900045111600001-02(46)','เครื่องบลูเรย์ SONY',1],
+ [2,'57สห99000451116000-01(3)','เครื่องพาวเวอร์แอมป์ YAMAHA',1],
+ [2,'57สห99000451116000-01(37)','ทีวี SONY',1],
+ [2,'39สห5965-2-2-17','ลำโพง YAMAHA',1],
+ [2,'39สห5965-2-2-18','ลำโพง YAMAHA',1],
+ [2,'39สห5965-2-2-29','ลำโพง YAMAHA',1],
+ [2,'39สห5965-2-2-20','ลำโพง YAMAHA',1],
+ [2,'39สห5965-2-2-21','ลำโพง YAMAHA',1],
+ [2,'57สห990004511160000-1(15)','ลำโพงแยกเสียงทวิตเตอร์',1],
+ [2,'57สห990004511160000-1(16)','ลำโพงแยกเสียงทวิตเตอร์',1],
+ [2,'57สห990004511160000-1(35)','ลำโพงแยกเสียงทวิตเตอร์',2],
+ [2,'57สห990004511160000-1(36)','ลำโพงแยกเสียงทวิตเตอร์',2],
+ [2,'57สห99000451116000-01(38)','KRAMER รับสัญญาณ',1],
+ [2,'57สห99000451116000-03(8)','KRAMER รับสัญญาณ',1],
+ [2,'57สห99000451116000-01(15)','KRAMER รับสัญญาณ',1],
+ [2,'57สห990004511160001-02(23)','เครื่องมิกเซอร์ YAMAHA',1],
+ [2,'57สห990004511160001-02(50)','ตู้แร็ก',1],
+ [2,'','ไมค์ลอย SHURE',1,'','ไม่มีเลขครุภัณฑ์'],
+ [2,'','ไมค์ลอย SHURE',1,'','ไม่มีเลขครุภัณฑ์'],
+ [2,'38สห5965-10-1-1(2)','ขาไมค์ตั้งโต๊ะ',1],
+ [3,'57สห990004511160000-1(1)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [3,'','ทีวี Samsung 75 นิ้ว',1,'','ไม่มีเลขครุภัณฑ์'],
+ [3,'','เครื่องขยายเสียง',1,'','ไม่มีเลขครุภัณฑ์'],
+ [3,'','ตัวรับสัญญาณไมค์ Shure',1,'','ไม่มีเลขครุภัณฑ์'],
+ [4,'63สห99000045111000-05-3','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [4,'63สห99000045111000-05-3','จอ',1],
+ [4,'63สห99000045111000-05-3','แอมป์เสียง',1],
+ [4,'63สห99000045111000-05-3','ไมค์ลอย RODE',1],
+ [4,'63สห99000045111000-05-3','ไมค์สาย SHURE',2],
+ [4,'63สห99000045111000-05-3','ตัวรับสัญญาณไมค์ลอย RODE',1],
+ [5,'63สห99000045111000-05-4','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [5,'63สห99000045111000-05-4','จอ',1],
+ [5,'63สห99000045111000-05-4','แอมป์เสียง',1],
+ [5,'63สห99000045111000-05-4','ไมค์ลอย RODE',1],
+ [5,'63สห99000045111000-05-4','ไมค์สาย SHURE',2],
+ [5,'63สห99000045111000-05-4','ตัวรับสัญญาณไมค์ลอย RODE',1],
+ [6,'63สห99000045111000-05-5','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [6,'63สห99000045111000-05-5','จอ',1],
+ [6,'63สห99000045111000-05-5','แอมป์เสียง',1],
+ [6,'63สห99000045111000-05-5','ไมค์ลอย RODE',1],
+ [6,'63สห99000045111000-05-5','ไมค์สาย SHURE',2],
+ [6,'63สห99000045111000-05-5','ตัวรับสัญญาณไมค์ลอย RODE',1],
+ [7,'63สห99000045111000-05-6','ตัวรับสัญญาณไมค์ลอย RODE',1],
+ [7,'63สห99000045111000-05-6','แอมป์ TOA',1],
+ [7,'63สห99000045111000-05-6','ไมค์ไร้สาย',1],
+ [7,'63สห99000045111000-05-6','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [7,'63สห99000045111000-05-6','จอ',1],
+ [7,'63สห99000045111000-05-6','ตู้แร็ก',1],
+ [7,'63สห99000045111000-05-6','ลำโพงเล็กติดผนัง',4],
+ [8,'63สห99000045111000-05-1','ตัวรับสัญญาณไมค์ลอย RODE',1],
+ [8,'63สห99000045111000-05-1','แอมป์ TOA',1],
+ [8,'63สห99000045111000-05-1','ไมค์ไร้สาย',1],
+ [8,'63สห99000045111000-05-1','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [8,'63สห99000045111000-05-1','จอ',1],
+ [8,'63สห99000045111000-05-1','ตู้แร็ก',1],
+ [9,'63สห99000045111000-10(1)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [9,'63สห99000045111000-10(1)','จอ',1],
+ [10,'63สห99000045111000-9(1)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [10,'63สห99000045111000-9(1)','จอ',1],
+ [11,'63สห99000045111000-8(1)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [11,'63สห99000045111000-8(1)','จอ',1],
+ [12,'63สห99000045111000-7(1)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [12,'63สห99000045111000-7(1)','จอ',1],
+ [13,'57สห01015681000000-01(20)','ตู้แร็ก',1,'','VDO WALL A'],
+ [13,'57สห01015681000000-01(1)','เครื่องมิกเซอร์ YAMAHA',1],
+ [13,'57สห01015681000000-01(17)','จอมอนิเตอร์',1],
+ [13,'57สห01015681000000-01(11)','เครื่องรับสัญญาณไมค์ลอย SHURE',1],
+ [13,'57สห01015681000000-01(12)','เครื่องรับสัญญาณไมค์ลอย SHURE',1],
+ [13,'57สห01015681000000-01(15)','เครื่องบลูเรย์ SONY',1],
+ [13,'57สห01015681000000-01(3)','เครื่องแอมป์เสียง Crown XLi1500',1],
+ [13,'57สห01015681000000-01(5)','เครื่องแอมป์ไมค์ BOSE',1],
+ [13,'','ไมค์ลอย SHURE',4,'','ไม่มีเลขครุภัณฑ์'],
+ [14,'57สห01015681000000-01(19)','ตู้แร็ก',1,'','VDO WALL B'],
+ [14,'57สห01015681000000-01(2)','เครื่องมิกเซอร์ YAMAHA',1],
+ [14,'57สห01015681000000-01(12)','จอมอนิเตอร์',1],
+ [14,'57สห01015681000000-01(13)','เครื่องรับสัญญาณไมค์ลอย SHURE',1],
+ [14,'57สห01015681000000-01(14)','เครื่องรับสัญญาณไมค์ลอย SHURE',1],
+ [14,'57สห01015681000000-01(16)','เครื่องบลูเรย์ SONY',1],
+ [14,'57สห01015681000000-01(4)','เครื่องแอมป์เสียง Crown XLi1500',1],
+ [14,'57สห01015681000000-01(6)','เครื่องแอมป์ไมค์ BOSE',1],
+ [14,'','ไมค์ลอย SHURE',4,'','ไม่มีเลขครุภัณฑ์'],
+ [14,'57สห01015681000000-01(7)','ลำโพง BOSE',4],
+ [14,'57สห01015681000000-01(7.1)','ขาตั้งลำโพง',4],
+ [15,'57สห99000045111600-04(19)','จอ LG (Video Wall)',9],
+ [15,'57สห99000045111600-04(34)','ชุดติดตั้งจอ',9],
+ [15,'57สห99000045111600-04(14)','เครื่องรับสัญญาณ KRAMER',1],
+ [16,'57สห99000045111600-04(9)','จอ LG (Video Wall)',9],
+ [16,'57สห99000045111600-04(17)','ชุดติดตั้งจอ',9],
+ [16,'57สห99000045111600-04(7)','เครื่องรับสัญญาณ KRAMER',1],
+ [16,'57สห99000045111600-04(29)','CPU LG',1],
+ [16,'39สห5820-2-1-6','เครื่องต่อแยกสัญญาณจอ',1],
+ [17,'62สห01015681000000-01(21)','ทีวี SAMSUNG',1],
+ [17,'62สห01015681000000-01(1).1','ลำโพง JBL',2],
+ [17,'62สห01015681000000-01(17)','เครื่อง PC acer',1],
+ [17,'62สห01015681000000-01(5)','เครื่องแอมป์เสียง JBL',1],
+ [17,'62สห01015681000000-01(9)','ไมค์สาย SHURE',2],
+ [17,'','คีย์บอร์ด acer',1],
+ [17,'','เมาส์ไร้สาย',1],
+ [17,'58สห01042024000000-18(2)','เครื่องสำรองไฟ',1],
+ [18,'62สห01015681000000-01(22)','ทีวี SAMSUNG',1],
+ [18,'62สห01015681000000-01(2).1','ลำโพง JBL',2],
+ [18,'62สห01015681000000-01(18)','เครื่อง PC acer',1],
+ [18,'62สห01015681000000-01(6)','เครื่องแอมป์เสียง JBL',1],
+ [18,'62สห01015681000000-01(11)','ไมค์สาย SHURE',2],
+ [18,'','คีย์บอร์ด acer',1],
+ [18,'57สห01042024000000-40(2)','เครื่องสำรองไฟ',1],
+ [19,'62สห01015681000000-01(23)','ทีวี SAMSUNG',1],
+ [19,'62สห01015681000000-01(3).1','ลำโพง JBL',2],
+ [19,'62สห01015681000000-01(19)','เครื่อง PC acer',1],
+ [19,'62สห01015681000000-01(7)','เครื่องแอมป์เสียง JBL',1],
+ [19,'62สห01015681000000-01(13)','ไมค์สาย SHURE',2],
+ [19,'','คีย์บอร์ด acer',1],
+ [20,'62สห01015681000000-01(24)','ทีวี SAMSUNG',1],
+ [20,'62สห01015681000000-01(4).1','ลำโพง JBL',2],
+ [20,'62สห01015681000000-01(20)','เครื่อง PC acer',1],
+ [20,'62สห01015681000000-01(8)','เครื่องแอมป์เสียง JBL',1],
+ [20,'62สห01015681000000-01(15)','ไมค์สาย SHURE',2],
+ [20,'','คีย์บอร์ด acer',1],
+ [20,'','เมาส์ไร้สาย',1],
+ [21,'63สห99000045111000-11B5(1)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [21,'52สห01042024000000-75(14)','จอ',1],
+ [21,'57สห990004511160001-02(1)','เครื่องขยายเสียงไมค์ BOSCH',1],
+ [21,'39สห5965-9-2-4','เครื่องพาวเวอร์แอมป์',2],
+ [21,'39สห5965-9-2-4','เครื่องมิกเซอร์',1],
+ [21,'38สห5965-10-1-1(3)','เครื่องรับสัญญาณไมค์ลอย',1],
+ [21,'39สห5965-1-2-5','เครื่องรับสัญญาณไมค์ลอย',1],
+ [21,'39สห5965-2-2-9','ลำโพงเล็ก',2],
+ [21,'39สห5965-9-2-8','ลำโพงเล็ก YAMAHA',1],
+ [21,'57สห990004511160001-02(22)','เครื่องรับสัญญาณไมค์ลอย SHURE',1],
+ [21,'39สห5965-2-2-7','ลำโพง RAMSA',2],
+ [22,'63สห99000045111000-12(1)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [22,'63สห99000045111000-12(2)','จอ',1],
+ [23,'63สห99000045111000-13(1)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [23,'63สห99000045111000-13(2)','จอ',1],
+ [23,'39สห5965-10-1-2','ตัวรับสัญญาณไมค์',1],
+ [24,'68 สรช.01044620000000-01','กล้อง CCTV Hikvision',5],
+ [24,'','กล้อง CCTV Hikvision',2,'','ไม่มีเลขครุภัณฑ์'],
+ [25,'63สห99000045121500-0001(1)','กล้องถ่ายทอดสด',1],
+ [25,'63สห99000045121500-0001(2)','กล้องถ่ายทอดสด (mevo)',2,'','ของห้องสมุด'],
+ [25,'63สห99000045121500-0001(3)','ขาตั้งกล้อง',2],
+ [25,'63สห99000045121500-0001(5)','แท็บเล็ต',2,'','พี่พัน'],
+ [25,'63สห99000045121500-0001(7)','ขาตั้งกล้องเคลื่อนที่',2],
+ [25,'63สห99000045121500-0001(9)','ไมโครโฟนไร้สายแบบหนีบ',2],
+ [25,'63สห99000045121500-0001(11)','ชุดสตูดิโอถ่ายภาพขนาดใหญ่',1],
+ [25,'63สห01018111000000-0001','ไมโครโฟนอัดเสียง',1],
+ [25,'62สว1054134000000','iMac Pro',3],
+ [25,'62สว1041861000000','iMac',3,'','-05 IT ดูแล'],
+ [25,'','กล้อง DSLR 5D Mark 4',1],
+ [25,'','Crane DSLR',2],
+ [25,'62สว99000042293700','CNC Laser Cut Set',3],
+ [25,'62สว01016547000000','3D Printer (filament)',10,'ซ่อม','ส่งซ่อม KRIS 08-03-66'],
+ [25,'','3D Resin',2],
+ [25,'','3D Scanner',1],
+ [26,'นว6401017999000000-01','ลำโพงเคลื่อนที่',1,'','รับจาก B-TECH 31/01/65'],
+ [26,'','MIC ไร้สาย',2],
+ [26,'','รีโมท',1],
+ [26,'','adaptor',1],
+ [26,'นว6401017999000000-02','ลำโพงเคลื่อนที่',1,'','รับจาก B-TECH 31/01/65'],
+ [26,'','MIC ไร้สาย',2],
+ [26,'','รีโมท',1],
+ [26,'','adaptor',1],
+ [26,'64นว99000045111600','Epson Projector',3,'','รับมา 08/09/65 • 1 ตัวอยู่ห้องคอม 3'],
+ [26,'','สาย HDMI Ztech 10 m',2],
+ [27,'57สห990004511160001-01(32)','โน้ตบุ๊ก Lenovo',8],
+ [27,'57สห99000045111600-04(9)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [27,'57สห99000045111600-04(30)','เครื่องฉายโปรเจคเตอร์ SONY',1],
+ [27,'54สห99000045111600-01','เครื่องฉายโปรเจคเตอร์ Panasonic',2],
+ [27,'51สห99000045111600','เครื่องฉายโปรเจคเตอร์ Panasonic',2,'','จัดซื้อปี 2551'],
+ [27,'39สห5965','ลำโพงเล็ก YAMAHA',3],
+ [27,'57สห01015681000000-01(11.2)','ขาไมค์สั้น',4],
+ [27,'57สห9900045111600-05(36)','ขาไมค์สั้น',4],
+ [27,'57สห01015681000000-01(11.1)','ขาไมค์ยาว',1],
+ [27,'57สห01015681000000-01(12.1)','ขาไมค์ยาว',3],
+ [27,'57สห99000045111600-05(30)','ขาไมค์ยาว',5],
+ [27,'57สห990004511160001-02(47)','ไมค์ตั้งโต๊ะ',2],
+ [27,'38สห5965-10-1-2(2)','ไมค์ตั้งโต๊ะ',1],
+ [27,'57สห99000451116000-01(39)','เครื่องบลูเรย์ SONY',1],
+ [27,'57สห99000045111600-03(16)','ไซเน็ต LG',1],
+ [27,'57สห990004511160001-01(44)','เครื่องฉาย DIGITAL VISUALIZER',1],
+ [27,'57สห99000045111600-04(1)','ตัวรับสัญญาณไมค์ลอย SHURE',1],
+ [27,'','TV ดิจิตอลเคลื่อนที่ LG 65 นิ้ว',1,'','ยังไม่มีเลขครุภัณฑ์ (ออมสิน)'],
+ [27,'','โพเดี่ยม (ดำ)',1,'','ยังไม่มีเลขครุภัณฑ์'],
+ [27,'','จอ Smart TV',3,'','อ.อู๊ด / ศูนย์ฉีดวัคซีน'],
+ [27,'','จอ LG Smart TV 55 นิ้ว',3],
+ [27,'67 สรช.01042027000000-01','5-CH HD SWITCHER',1,'','ห้อง 30 ที่นั่งชั่วคราว'],
+ [27,'67 สรช.01017181000000','ชุดไมค์ไร้สาย Shure (สำรอง)',5,'','100 ที่นั่ง/Studio/โถง'],
+ [27,'','ชุดลำโพงแนวตั้ง JBL PRX ONE',2,'','โถง A'],
+ [27,'','ชุดไมโครโฟนไวเลส Shure',2,'','โถง B (ชุดละ 2 ตัว)'],
+ [27,'','ชุดมิกเซอร์ Soundcraft Nano',1,'','โถง A'],
+ [27,'','วิทยุสื่อสาร (สีแดง)',6],
+ [27,'','ชุดประชุมทางไกล Video Conference',1,'','ห้อง ผอ.'],
+ [27,'','สายสัญญาณ AV 5 เมตร',4,'','โถง B']
+];
+const SEED_TASKS=[
+  {id:1,name:'เปิด-ปิดระบบไฟและระบบรวม อาคาร A & B',freq:'daily',dow:0,dom:1,time:'08:00',area:'อาคาร A/B'},
+  {id:2,name:'ตรวจสอบ Video Wall สีส้ม/สีม่วง ชั้น 1 อาคาร B',freq:'daily',dow:0,dom:1,time:'08:30',area:'อาคาร B'},
+  {id:3,name:'เช็คความพร้อมห้องประชุม 100 ที่นั่งก่อนใช้งาน',freq:'daily',dow:0,dom:1,time:'09:00',area:'ห้องประชุม 100'},
+  {id:4,name:'ตรวจไมค์ลอยและแบตเตอรี่ไมค์ไร้สาย',freq:'daily',dow:0,dom:1,time:'09:00',area:'คลังอุปกรณ์'},
+  {id:5,name:'ตรวจกล้อง CCTV อาคาร B และการบันทึกภาพ',freq:'daily',dow:0,dom:1,time:'10:00',area:'อาคาร B'},
+  {id:6,name:'ตรวจอุณหภูมิห้องควบคุม/ห้องระบบ',freq:'daily',dow:0,dom:1,time:'10:00',area:'อาคาร B'},
+  {id:7,name:'บันทึกการยืม-คืนอุปกรณ์โสตทัศนูปกรณ์',freq:'daily',dow:0,dom:1,time:'16:00',area:'ฝ่ายฯ'},
+  {id:8,name:'ตรวจความเรียบร้อย สตูดิโอ & FABLab ก่อนปิด',freq:'daily',dow:0,dom:1,time:'16:30',area:'สตูดิโอ'},
+  {id:9,name:'ทดสอบระบบเครื่องเสียง VDO WALL A/B แบบเต็มระบบ',freq:'weekly',dow:1,dom:1,time:'13:00',area:'อาคาร B'},
+  {id:10,name:'ติดตามสถานะ 3D Printer ส่งซ่อม KRIS',freq:'weekly',dow:3,dom:1,time:'14:00',area:'FABLab'},
+  {id:11,name:'สุ่มตรวจนับครุภัณฑ์ประจำสัปดาห์',freq:'weekly',dow:5,dom:1,time:'14:00',area:'ทุกจุด'},
+  {id:12,name:'ตรวจสภาพครุภัณฑ์ทั้งระบบ (รายเดือน)',freq:'monthly',dow:0,dom:1,time:'09:00',area:'ทุกจุด'},
+  {id:13,name:'สำรองข้อมูลระบบ (Export Backup)',freq:'monthly',dow:0,dom:28,time:'16:00',area:'ระบบ'}
+];
+
+function makeSeed(){
+  const assets=[]; let id=1;
+  SEED_RAW.forEach(r=>{
+    assets.push({id:id++,room:r[0],code:r[1],name:r[2],qty:r[3],
+      status:r[4]||'',note:r[5]||'',surveyedAt:null,
+      yearBE:yearFromCode(r[1]),life:estLife(r[2]),price:estPrice(r[2])});
+  });
+  const logs=[];
+  const p3d=assets.find(a=>a.name.indexOf('3D Printer')>-1);
+  if(p3d) logs.push({id:1,asset:p3d.id,date:'2023-03-08',cost:0,note:'ส่งซ่อม KRIS (รอใบเสนอราคา)'});
+  return {rooms:SEED_ROOMS.map(r=>Object.assign({},r)),assets,logs,
+    tasks:SEED_TASKS.map(t=>Object.assign({},t)),
+    excluded:[],checks:{},lastExport:null,
+    settings:{pin:'1234',adminName:'วิภาส (Wiphas)',adminEmail:'wiphas.on@kmitl.ac.th'}};
+}
+
+let data=null;
+function loadData(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(raw){ const d=JSON.parse(raw); if(d&&d.rooms&&d.assets){ d.assets.forEach(a=>{ if(a.surveyedAt===undefined) a.surveyedAt=null; }); return d; } }
+  }catch(e){}
+  return makeSeed();
+}
+function save(){ localStorage.setItem(STORE_KEY,JSON.stringify(data)); }
+
+/* ===== แอดมิน ===== */
+const isAdmin=()=>sessionStorage.getItem('kllc_admin')==='1';
+function adminClick(){
+  if(isAdmin()){
+    if(confirm('ออกจากระบบแอดมิน?')){
+      sessionStorage.removeItem('kllc_admin');
+      updateAdminUI(); renderAll(); toast('ออกจากระบบแล้ว 🔒');
+    }
+  }else{
+    const p=document.getElementById('loginPanel');
+    p.style.display=(p.style.display==='block')?'none':'block';
+  }
+}
+function doLogin(){
+  const pin=document.getElementById('pinInput').value;
+  if(pin===data.settings.pin){
+    sessionStorage.setItem('kllc_admin','1');
+    document.getElementById('loginPanel').style.display='none';
+    document.getElementById('pinInput').value='';
+    updateAdminUI(); renderAll();
+    toast('สวัสดีคุณ'+data.settings.adminName+' 🔓');
+  } else toast('PIN ไม่ถูกต้อง ❌');
+}
+function changePin(){
+  const np=document.getElementById('newPin').value.trim();
+  if(np.length<4){ toast('PIN ต้องมีอย่างน้อย 4 หลัก'); return; }
+  data.settings.pin=np; save();
+  document.getElementById('newPin').value='';
+  toast('เปลี่ยน PIN แล้ว 🔑');
+}
+function updateAdminUI(){
+  const adm=isAdmin();
+  document.getElementById('adminBtn').innerHTML=adm?('🔓 แอดมิน: คุณ'+data.settings.adminName+' • ออกจากระบบ'):'🔐 เข้าระบบแอดมิน';
+  document.getElementById('assetLockNote').style.display=adm?'none':'block';
+  document.getElementById('taskAdminPanel').style.display=adm?'block':'none';
+  document.getElementById('roomAdminPanel').style.display=adm?'block':'none';
+  document.getElementById('btnReset').style.display=adm?'inline-block':'none';
+}
+
+/* ===== ตัวช่วย ===== */
+const fmt=n=>Number(n||0).toLocaleString('th-TH');
+const todayISO=()=>new Date().toISOString().slice(0,10);
+const curBE=()=>new Date().getFullYear()+543;
+const ageOf=a=>a.yearBE?curBE()-a.yearBE:null;
+function normalizeCode(t){ return String(t||'').replace(/^\uFEFF/,'').trim(); }
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function ageStatus(a){
+  const g=ageOf(a);
+  if(g===null) return {key:'unknown',label:'ไม่ทราบปี',bg:'#334155',fg:'#cbd5e1'};
+  if(g<4) return {key:'new',label:'ใหม่ ('+g+' ปี)',bg:'#14532d',fg:'#86efac'};
+  if(g<a.life) return {key:'mid',label:'ปานกลาง ('+g+' ปี)',bg:'#78350f',fg:'#fcd34d'};
+  return {key:'old',label:'เกินอายุ ('+g+' ปี)',bg:'#7f1d1d',fg:'#fca5a5'};
+}
+const ageBadge=a=>{const s=ageStatus(a);return '<span class="badge" style="background:'+s.bg+';color:'+s.fg+'">'+s.label+'</span>';};
+function condBadge(a){
+  if(a.status==='ok') return '<span class="badge" style="background:#14532d;color:#86efac">ใช้งานได้</span>';
+  if(a.status==='เสีย') return '<span class="badge" style="background:#7f1d1d;color:#fca5a5">ใช้งานไม่ได้</span>';
+  if(a.status==='ซ่อม') return '<span class="badge" style="background:#78350f;color:#fcd34d">ส่งซ่อม</span>';
+  return '<span class="badge" style="background:#334155;color:#94a3b8">ยังไม่สำรวจ</span>';
+}
+function roomOf(a){ return data.rooms.find(r=>r.id===a.room)||{name:'-',code:'-'}; }
+function repairCost(id){ return data.logs.filter(l=>l.asset===id).reduce((s,l)=>s+l.cost,0); }
+function repairRatio(a){ return a.price>0?Math.round(repairCost(a.id)*1000/a.price)/10:0; }
+function nextId(arr){ return arr.reduce((m,x)=>Math.max(m,x.id),0)+1; }
+function findByCode(code){ const c=normalizeCode(code); if(!c) return null; return data.assets.find(a=>normalizeCode(a.code)===c)||null; }
+function thaiToday(){
+  const d=new Date();
+  const m=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  return d.getDate()+' '+m[d.getMonth()]+' พ.ศ. '+(d.getFullYear()+543);
+}
+function thaiDate(ds){
+  const d=new Date(ds+'T00:00:00');
+  const m=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  return 'วัน'+DOW[d.getDay()]+'ที่ '+d.getDate()+' '+m[d.getMonth()]+' พ.ศ. '+(d.getFullYear()+543);
+}
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2400);
+}
+function feedback(){
+  try{ if(navigator.vibrate) navigator.vibrate(80); }catch(e){}
+  try{
+    const Ctx=window.AudioContext||window.webkitAudioContext;
+    feedback.ctx=feedback.ctx||new Ctx();
+    const o=feedback.ctx.createOscillator(),g=feedback.ctx.createGain();
+    o.connect(g); g.connect(feedback.ctx.destination);
+    o.frequency.value=880; g.gain.value=0.06;
+    o.start(); o.stop(feedback.ctx.currentTime+0.09);
+  }catch(e){}
+}
+function expiredList(){ return data.assets.filter(a=>(a.yearBE&&ageOf(a)>=a.life)||a.status==='เสีย'||repairRatio(a)>=60); }
+function setStatus(id,st){
+  const a=data.assets.find(x=>x.id===id); if(!a) return;
+  a.status=(a.status===st)?'':st;
+  if(a.status) a.surveyedAt=todayISO();
+  save(); renderAll(); toast('อัปเดตสภาพแล้ว');
+}
+
+/* ===== Modal ครุภัณฑ์ ===== */
+let modalAssetId=null;
+function fillModalRooms(){
+  document.getElementById('mRoom').innerHTML=data.rooms.map(r=>'<option value="'+r.id+'">'+r.name+(r.code?' ['+r.code+']':'')+'</option>').join('');
+}
+function openAddAsset(code){
+  modalAssetId=null;
+  document.getElementById('assetModalTitle').textContent='➕ เพิ่มครุภัณฑ์ใหม่';
+  document.getElementById('mName').value='';
+  document.getElementById('mCode').value=code||'';
+  fillModalRooms();
+  document.getElementById('mYear').value='';
+  document.getElementById('mQty').value='1';
+  document.getElementById('mPrice').value='';
+  document.getElementById('mStatus').value='';
+  document.getElementById('mNote').value='';
+  document.getElementById('mSurveyed').textContent='';
+  document.getElementById('mDeleteBtn').style.display='none';
+  document.getElementById('mLabelBtn').style.display='none';
+  document.getElementById('assetModal').style.display='flex';
+}
+function openEditAsset(id){
+  const a=data.assets.find(x=>x.id===id); if(!a) return;
+  modalAssetId=id;
+  document.getElementById('assetModalTitle').textContent='✏️ แก้ไข: '+a.name;
+  document.getElementById('mName').value=a.name;
+  document.getElementById('mCode').value=a.code||'';
+  fillModalRooms();
+  document.getElementById('mRoom').value=a.room;
+  document.getElementById('mYear').value=a.yearBE||'';
+  document.getElementById('mQty').value=a.qty;
+  document.getElementById('mPrice').value=a.price;
+  document.getElementById('mStatus').value=a.status||'';
+  document.getElementById('mNote').value=a.note||'';
+  document.getElementById('mSurveyed').textContent='สำรวจล่าสุด: '+(a.surveyedAt||'ยังไม่เคยสำรวจ');
+  document.getElementById('mDeleteBtn').style.display=isAdmin()?'inline-block':'none';
+  document.getElementById('mLabelBtn').style.display='inline-block';
+  document.getElementById('assetModal').style.display='flex';
+}
+function closeAssetModal(){ document.getElementById('assetModal').style.display='none'; modalAssetId=null; }
+function saveAssetModal(){
+  if(!isAdmin()){ toast('เฉพาะแอดมิน — กรุณาเข้าระบบก่อนค่ะ'); return; }
+  if(!data.rooms.length){ toast('ยังไม่มีห้อง — ไปเพิ่มห้องที่แท็บ 🏫 รายห้องก่อนนะคะ'); return; }
+  const name=document.getElementById('mName').value.trim();
+  if(!name){ toast('กรุณากรอกชื่อครุภัณฑ์'); return; }
+  const code=normalizeCode(document.getElementById('mCode').value);
+  const yrRaw=document.getElementById('mYear').value;
+  const yr=yrRaw?Number(yrRaw):yearFromCode(code);
+  const qty=Number(document.getElementById('mQty').value)||1;
+  const priceRaw=document.getElementById('mPrice').value;
+  const price=priceRaw!==''?Number(priceRaw):null;
+  const status=document.getElementById('mStatus').value;
+  const note=document.getElementById('mNote').value.trim();
+  const room=Number(document.getElementById('mRoom').value);
+  if(modalAssetId){
+    const a=data.assets.find(x=>x.id===modalAssetId);
+    if(a){ a.name=name; a.code=code; a.room=room; a.yearBE=yr; a.qty=qty;
+      if(price!==null) a.price=price;
+      a.life=estLife(name);
+      if(a.status!==status){ a.status=status; if(status) a.surveyedAt=todayISO(); }
+      a.note=note; }
+    toast('บันทึกการแก้ไขแล้ว ✅');
+  }else{
+    data.assets.push({id:nextId(data.assets),room:room,code:code,name:name,qty:qty,yearBE:yr,
+      life:estLife(name),price:price!==null?price:estPrice(name),status:status,note:note,
+      surveyedAt:status?todayISO():null});
+    toast('เพิ่มครุภัณฑ์แล้ว ✅');
+  }
+  save(); closeAssetModal(); renderAll();
+}
+function deleteFromModal(){
+  if(modalAssetId){ deleteAsset(modalAssetId); closeAssetModal(); }
+}
+function showLabelFromModal(){ if(modalAssetId) renderLabels([data.assets.find(x=>x.id===modalAssetId)]); }
+
+/* ===== สแกน QR / Barcode + พิมพ์มือ ===== */
+let scannerObj=null,scanMode='edit',srAssetId=null,sessionScanned={};
+function openScanner(mode){
+  scanMode=mode; srAssetId=null;
+  document.getElementById('srBox').style.display='none';
+  document.getElementById('manualCode').value='';
+  document.getElementById('scanStatus').textContent='กำลังเปิดกล้อง… (กดอนุญาตการเข้าถึงกล้องด้วยนะคะ)';
+  document.getElementById('scanOverlay').style.display='flex';
+  try{
+    scannerObj=new Html5Qrcode('scanRegion');
+    scannerObj.start({facingMode:'environment'},{fps:10,qrbox:{width:260,height:160}},
+      function(text){ onScan(text); },
+      function(){}
+    ).then(function(){
+      document.getElementById('scanStatus').textContent='หันกล้องไปที่ QR / Barcode ของครุภัณฑ์';
+    }).catch(function(err){
+      document.getElementById('scanStatus').textContent='เปิดกล้องไม่ได้: '+err+' — ใช้ช่อง "พิมพ์เลข" ด้านล่างแทนได้ค่ะ';
+    });
+  }catch(e){
+    document.getElementById('scanStatus').textContent='เบราว์เซอร์นี้ไม่รองรับการสแกน — ใช้ช่อง "พิมพ์เลข" แทนได้ค่ะ';
+  }
+}
+function stopScanner(){
+  if(scannerObj){
+    try{
+      scannerObj.stop().then(function(){ try{ scannerObj.clear(); }catch(e){} }).catch(function(){});
+    }catch(e){}
+    scannerObj=null;
+  }
+  document.getElementById('scanOverlay').style.display='none';
+}
+function onScan(text){ handleScannedCode(text); }
+function manualSubmit(){
+  const v=document.getElementById('manualCode').value;
+  if(!v.trim()){ toast('กรุณาพิมพ์เลขครุภัณฑ์'); return; }
+  handleScannedCode(v);
+  document.getElementById('manualCode').value='';
+}
+function handleScannedCode(raw){
+  const code=normalizeCode(raw);
+  if(!code){ toast('ไม่พบรหัส'); return; }
+  const a=findByCode(code);
+  feedback();
+  if(scanMode==='survey'){
+    if(scannerObj){ try{ scannerObj.pause(true); }catch(e){} }
+    document.getElementById('srBox').style.display='block';
+    if(a){
+      if(sessionScanned[a.id]){ toast('⚠️ ชิ้นนี้สแกนไปแล้วในรอบนี้ — ตรวจซ้ำได้'); }
+      sessionScanned[a.id]=(sessionScanned[a.id]||0)+1;
+      srAssetId=a.id;
+      showScanResult();
+    }else{
+      srAssetId=null;
+      document.getElementById('srInfo').innerHTML='❌ ไม่พบเลข <b>'+escapeHtml(code)+'</b> ในระบบ<div class="mut">ลองตรวจการพิมพ์ หรือเพิ่มครุภัณฑ์ใหม่จากเลขนี้</div>'+
+        '<div style="margin-top:8px"><button class="ghost" onclick="stopScanner();openAddAsset(\''+escapeHtml(code).replace(/'/g,"\\'")+'\')">➕ เพิ่มครุภัณฑ์เลขนี้</button></div>';
+    }
+    const cnt=Object.keys(sessionScanned).length;
+    document.getElementById('scanStatus').textContent='สำรวจรอบนี้แล้ว '+cnt+' รายการ';
+  }else{
+    stopScanner();
+    if(scanMode==='fill'){
+      document.getElementById('mCode').value=code;
+      toast(a?('เลขนี้มีในระบบแล้ว: '+a.name):'เติมเลขจากสแกนแล้ว 📷');
+    }else{
+      if(a){ toast('พบ: '+a.name); openEditAsset(a.id); }
+      else{ toast('ไม่พบเลข '+code+' — เปิดฟอร์มเพิ่มใหม่'); openAddAsset(code); }
+    }
+  }
+}
+function showScanResult(){
+  const a=data.assets.find(x=>x.id===srAssetId); if(!a) return;
+  document.getElementById('srInfo').innerHTML='<b>'+a.name+'</b> '+(a.qty>1?'×'+a.qty:'')+
+    '<div class="mut">'+(a.code||'-')+' • '+roomOf(a).name+'</div>'+
+    '<div style="margin-top:6px">สภาพปัจจุบัน: '+condBadge(a)+'</div>'+
+    '<div class="mut">สำรวจล่าสุด: '+(a.surveyedAt||'ยังไม่เคยสำรวจ')+'</div>';
+}
+function srSet(st){ setStatus(srAssetId,st); showScanResult(); }
+function srEdit(){ const id=srAssetId; stopScanner(); openEditAsset(id); }
+function scanAgain(){
+  document.getElementById('srBox').style.display='none';
+  document.getElementById('scanStatus').textContent='หันกล้องไปที่ QR / Barcode ของครุภัณฑ์';
+  if(scannerObj){ try{ scannerObj.resume(); }catch(e){} }
+}
+
+/* ===== สติกเกอร์ QR ===== */
+function renderLabels(list){
+  list=list.filter(function(a){ return !!a; });
+  if(!list.length){ toast('ไม่มีรายการสำหรับพิมพ์ QR'); return; }
+  const sheet=document.getElementById('labelSheet');
+  sheet.innerHTML=list.map(a=>
+    '<div class="label"><canvas id="qr-'+a.id+'"></canvas>'+
+    '<div class="lname">'+a.name+'</div>'+
+    '<div class="lcode">'+(a.code||('KLLC-ID-'+a.id))+'</div>'+
+    '<div class="lroom">'+roomOf(a).name+' • KLLC สจล.</div></div>').join('');
+  document.getElementById('labelOverlay').style.display='flex';
+  list.forEach(a=>{
+    const cv=document.getElementById('qr-'+a.id);
+    if(cv) QRCode.toCanvas(cv,(a.code||('KLLC-ID-'+a.id)),{width:110,margin:1},function(){});
+  });
+}
+function printFilteredLabels(){
+  const rows=currentFilteredAssets();
+  if(!rows.length){ toast('ไม่มีรายการให้พิมพ์'); return; }
+  if(rows.length>120){ toast('พิมพ์ได้สูงสุด 120 รายการ/ครั้ง'); }
+  renderLabels(rows.slice(0,120));
+}
+function printLabels(){ document.body.classList.add('printLabel'); setTimeout(function(){ window.print(); },80); }
+function closeLabels(){ document.getElementById('labelOverlay').style.display='none'; }
+window.addEventListener('afterprint',function(){ document.body.classList.remove('printLabel'); document.body.classList.remove('printCheck'); });
+
+/* ===== จัดการห้อง ===== */
+let editRoomId=null;
+document.getElementById('roomForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  if(!isAdmin()) return;
+  const r={code:document.getElementById('rCode').value.trim(),
+    name:document.getElementById('rName').value.trim(),
+    b:document.getElementById('rB').value.trim(),
+    f:document.getElementById('rF').value.trim(),
+    y:document.getElementById('rY').value?Number(document.getElementById('rY').value):null,
+    closed:document.getElementById('rClosed').checked};
+  if(editRoomId){
+    const x=data.rooms.find(z=>z.id===editRoomId);
+    if(x) Object.assign(x,r);
+    toast('แก้ไขห้องแล้ว ✅');
+  }else{
+    r.id=nextId(data.rooms); data.rooms.push(r); toast('เพิ่มห้องแล้ว ✅');
+  }
+  cancelRoomEdit(); save(); renderAll();
+});
+function editRoom(id){
+  const r=data.rooms.find(z=>z.id===id); if(!r) return;
+  editRoomId=id;
+  document.getElementById('rCode').value=r.code||'';
+  document.getElementById('rName').value=r.name;
+  document.getElementById('rB').value=r.b||'';
+  document.getElementById('rF').value=r.f||'';
+  document.getElementById('rY').value=r.y||'';
+  document.getElementById('rClosed').checked=!!r.closed;
+  document.getElementById('btnSubmitRoom').textContent='บันทึกการแก้ไข';
+  document.getElementById('btnCancelRoom').style.display='inline-block';
+}
+function cancelRoomEdit(){
+  editRoomId=null;
+  document.getElementById('roomForm').reset();
+  document.getElementById('btnSubmitRoom').textContent='เพิ่มห้อง';
+  document.getElementById('btnCancelRoom').style.display='none';
+}
+function deleteRoom(id){
+  const cnt=data.assets.filter(a=>a.room===id).length;
+  if(cnt>0){ alert('ห้องนี้ยังมีครุภัณฑ์ '+cnt+' รายการ — กรุณาย้ายหรือลบออกก่อน'); return; }
+  if(!confirm('ลบห้องนี้?')) return;
+  data.rooms=data.rooms.filter(r=>r.id!==id);
+  if(selectedRoom===id&&data.rooms.length) selectedRoom=data.rooms[0].id;
+  save(); renderAll(); toast('ลบห้องแล้ว');
+}
+
+/* ===== Checklist ===== */
+function isDue(t,d){
+  if(t.freq==='weekly') return d.getDay()===Number(t.dow);
+  if(t.freq==='monthly') return d.getDate()===Number(t.dom);
+  return true;
+}
+function freqLabel(t){
+  if(t.freq==='weekly') return 'สัปดาห์ละครั้ง (วัน'+DOW[t.dow]+')';
+  if(t.freq==='monthly') return 'เดือนละครั้ง (วันที่ '+t.dom+')';
+  return 'ทุกวัน';
+}
+function dueOn(ds){
+  const d=new Date(ds+'T00:00:00');
+  return data.tasks.filter(t=>isDue(t,d));
+}
+function renderChecklist(){
+  const ds=document.getElementById('checkDate').value||todayISO();
+  const due=dueOn(ds);
+  const day=data.checks[ds]||{};
+  const done=due.filter(t=>day[t.id]&&day[t.id].done).length;
+  const pct=due.length?Math.round(done*100/due.length):0;
+  document.getElementById('checkProg').style.width=pct+'%';
+  document.getElementById('checkProg').style.background=pct===100?'var(--green)':'var(--blue)';
+  document.getElementById('checkText').textContent='ทำแล้ว '+done+' / '+due.length+' รายการ ('+pct+'%) • '+thaiDate(ds);
+  document.getElementById('checkBody').innerHTML=due.length?due.map(t=>{
+    const c=day[t.id]||{done:false,note:''};
+    return '<tr><td><input type="checkbox" '+(c.done?'checked':'')+' onchange="toggleCheck('+t.id+')" style="width:18px;height:18px;cursor:pointer"></td>'+
+      '<td'+(c.done?' style="text-decoration:line-through;color:var(--mut)"':'')+'>'+t.name+(t.area?'<div class="mut">'+t.area+'</div>':'')+'</td>'+
+      '<td>'+(t.time||'-')+'</td><td class="mut">'+freqLabel(t)+'</td>'+
+      '<td><input type="text" value="'+(c.note||'').replace(/"/g,'&quot;')+'" placeholder="บันทึก..." onchange="setNote('+t.id+',this.value)" style="width:100%"></td></tr>';
+  }).join(''):'<tr><td colspan="5" class="mut">ไม่มีงานที่กำหนดในวันนี้</td></tr>';
+  document.getElementById('taskAdminBody').innerHTML=data.tasks.map(t=>
+    '<tr><td>'+t.name+'</td><td class="mut">'+freqLabel(t)+'</td><td>'+(t.time||'-')+'</td><td>'+(t.area||'-')+'</td>'+
+    '<td style="white-space:nowrap"><button class="ghost" onclick="editTask('+t.id+')">✏️</button> '+
+    '<button class="danger" onclick="deleteTask('+t.id+')">🗑</button></td></tr>').join('');
+}
+function toggleCheck(tid){
+  const ds=document.getElementById('checkDate').value||todayISO();
+  data.checks[ds]=data.checks[ds]||{};
+  const c=data.checks[ds][tid]||{done:false,note:''};
+  c.done=!c.done;
+  data.checks[ds][tid]=c;
+  save(); renderChecklist(); renderOverview();
+}
+function setNote(tid,val){
+  const ds=document.getElementById('checkDate').value||todayISO();
+  data.checks[ds]=data.checks[ds]||{};
+  const c=data.checks[ds][tid]||{done:false,note:''};
+  c.note=val;
+  data.checks[ds][tid]=c;
+  save();
+}
+function goToday(){ document.getElementById('checkDate').value=todayISO(); renderChecklist(); }
+let editTaskId=null;
+function freqChanged(){
+  const f=document.getElementById('tFreq').value;
+  document.getElementById('tDow').style.display=f==='weekly'?'inline-block':'none';
+  document.getElementById('tDom').style.display=f==='monthly'?'inline-block':'none';
+}
+document.getElementById('taskForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const freq=document.getElementById('tFreq').value;
+  const t={name:document.getElementById('tName').value.trim(),freq,
+    time:document.getElementById('tTime').value,area:document.getElementById('tArea').value.trim(),
+    dow:freq==='weekly'?Number(document.getElementById('tDow').value):0,
+    dom:freq==='monthly'?Number(document.getElementById('tDom').value):1};
+  if(editTaskId){
+    const x=data.tasks.find(z=>z.id===editTaskId);
+    if(x) Object.assign(x,t);
+    editTaskId=null; toast('แก้ไขงานแล้ว ✅');
+  }else{
+    t.id=nextId(data.tasks); data.tasks.push(t); toast('เพิ่มงานแล้ว ✅');
+  }
+  cancelTaskEdit(); save(); renderChecklist();
+});
+function editTask(id){
+  const t=data.tasks.find(z=>z.id===id); if(!t) return;
+  editTaskId=id;
+  document.getElementById('tName').value=t.name;
+  document.getElementById('tFreq').value=t.freq; freqChanged();
+  document.getElementById('tDow').value=t.dow;
+  document.getElementById('tDom').value=t.dom;
+  document.getElementById('tTime').value=t.time||'';
+  document.getElementById('tArea').value=t.area||'';
+  document.getElementById('btnSubmitTask').textContent='บันทึกการแก้ไข';
+  document.getElementById('btnCancelTask').style.display='inline-block';
+}
+function cancelTaskEdit(){
+  editTaskId=null;
+  document.getElementById('taskForm').reset(); freqChanged();
+  document.getElementById('btnSubmitTask').textContent='เพิ่มงาน';
+  document.getElementById('btnCancelTask').style.display='none';
+}
+function deleteTask(id){
+  const t=data.tasks.find(z=>z.id===id); if(!t) return;
+  if(!confirm('ลบงาน "'+t.name+'"?')) return;
+  data.tasks=data.tasks.filter(z=>z.id!==id);
+  save(); renderChecklist(); renderOverview(); toast('ลบงานแล้ว');
+}
+function buildCheckReport(){
+  const ds=document.getElementById('checkDate').value||todayISO();
+  const due=dueOn(ds);
+  const day=data.checks[ds]||{};
+  const doneList=due.filter(t=>day[t.id]&&day[t.id].done);
+  const pending=due.filter(t=>!(day[t.id]&&day[t.id].done));
+  let html='<div style="text-align:center;font-weight:700;font-size:18px;margin-bottom:10px">ใบส่งมอบงานประจำวัน</div>'+
+    '<p><b>หน่วยงาน:</b> ฝ่ายเทคโนโลยีและพื้นที่การเรียนรู้ สำนักการเรียนรู้ตลอดชีวิตฯ สจล. (KLLC)</p>'+
+    '<p><b>วันที่:</b> '+thaiDate(ds)+'</p>'+
+    '<p><b>สรุป:</b> ดำเนินการแล้ว '+doneList.length+' จาก '+due.length+' รายการ</p>';
+  if(doneList.length){
+    html+='<p style="margin-top:8px"><b>✅ งานที่ดำเนินการเรียบร้อย</b></p>'+
+      '<table><thead><tr><th>ลำดับ</th><th>งาน</th><th>เวลา</th><th>บันทึก</th></tr></thead><tbody>';
+    doneList.forEach((t,i)=>{ html+='<tr><td style="text-align:center">'+(i+1)+'</td><td>'+t.name+'</td><td>'+(t.time||'-')+'</td><td>'+((day[t.id]||{}).note||'-')+'</td></tr>'; });
+    html+='</tbody></table>';
+  }
+  if(pending.length){
+    html+='<p style="margin-top:12px"><b>⏳ งานที่ยังไม่ดำเนินการ</b></p><ul>';
+    pending.forEach(t=>{ html+='<li>'+t.name+(t.time?' (กำหนด '+t.time+')':'')+'</li>'; });
+    html+='</ul>';
+  }
+  html+='<br><br><table style="border:none"><tbody><tr>'+
+    '<td style="border:none;text-align:center;width:50%">ลงชื่อ ______________________<br>(ผู้ส่งมอบงาน)</td>'+
+    '<td style="border:none;text-align:center;width:50%">ลงชื่อ ______________________<br>(ผู้รับมอบ / หัวหน้า)</td>'+
+    '</tr></tbody></table>';
+  document.getElementById('checkReport').innerHTML=html;
+}
+function printCheckReport(){
+  buildCheckReport();
+  document.body.classList.add('printCheck');
+  setTimeout(function(){ window.print(); },60);
+}
+
+/* ===== ภาพรวม ===== */
+function computeStats(){
+  const s={new:0,mid:0,old:0,unknown:0,total:0};
+  data.assets.forEach(a=>{ s[ageStatus(a).key]+=a.qty; s.total+=a.qty; });
+  return s;
+}
+function forecastRows(){
+  const nowBE=curBE(); const map={};
+  const put=(k,sk,count,budget)=>{ if(!map[k])map[k]={label:k,sk,count:0,budget:0}; map[k].count+=count; map[k].budget+=budget; };
+  data.assets.forEach(a=>{
+    if(!a.yearBE){ put('ไม่ทราบปี (รอสำรวจ)',9999,a.qty,a.price*a.qty); return; }
+    const ex=a.yearBE+a.life;
+    if(ex<=nowBE) put('เกินอายุแล้ว (ต้องของบ)',-1,a.qty,a.price*a.qty);
+    else put('พ.ศ. '+ex,ex,a.qty,a.price*a.qty);
+  });
+  return Object.values(map).sort((x,y)=>x.sk-y.sk);
+}
+function renderOverview(){
+  const s=computeStats();
+  const dueT=dueOn(todayISO());
+  const dayT=data.checks[todayISO()]||{};
+  const doneT=dueT.filter(t=>dayT[t.id]&&dayT[t.id].done).length;
+  const surveyedUnits=data.assets.filter(a=>a.status!=='').reduce((t,a)=>t+a.qty,0);
+  const survPct=s.total?Math.round(surveyedUnits*100/s.total):0;
+  document.getElementById('statCards').innerHTML=
+    '<div class="card b-blue"><div class="num">'+fmt(s.total)+'</div><div class="lbl">ครุภัณฑ์ทั้งหมด (ชิ้น)</div></div>'+
+    '<div class="card b-green"><div class="num">'+fmt(s.new)+'</div><div class="lbl">🟩 ใหม่ (&lt; 4 ปี)</div></div>'+
+    '<div class="card b-amber"><div class="num">'+fmt(s.mid)+'</div><div class="lbl">🟧 ปานกลาง</div></div>'+
+    '<div class="card b-red"><div class="num">'+fmt(s.old)+'</div><div class="lbl">🟥 เกินอายุเกณฑ์</div></div>'+
+    '<div class="card b-gray"><div class="num">'+fmt(s.unknown)+'</div><div class="lbl">⬜ ไม่ทราบปี</div></div>'+
+    '<div class="card b-blue"><div class="num">'+survPct+'%</div><div class="lbl">📝 สำรวจสภาพแล้ว</div></div>'+
+    '<div class="card b-blue"><div class="num">'+doneT+'/'+dueT.length+'</div><div class="lbl">📋 งาน Routine วันนี้</div></div>';
+  const risk=[...data.assets].filter(a=>a.yearBE!==null).sort((a,b)=>ageOf(b)-ageOf(a)).slice(0,12);
+  document.getElementById('riskBody').innerHTML=risk.map(a=>
+    '<tr><td>'+a.name+'</td><td>'+roomOf(a).name+'</td><td>'+(a.yearBE||'-')+'</td><td>'+ageBadge(a)+'</td><td>'+a.qty+'</td><td>'+fmt(a.price)+' ฿</td></tr>').join('');
+  const byRoom={};
+  data.assets.forEach(a=>{ if(a.yearBE&&ageOf(a)>=a.life) byRoom[a.room]=(byRoom[a.room]||0)+a.qty; });
+  const top3=Object.entries(byRoom).sort((x,y)=>y[1]-x[1]).slice(0,3)
+    .map(e=>(data.rooms.find(r=>r.id===Number(e[0]))||{}).name+' ('+e[1]+' ชิ้น)').join(', ')||'-';
+  const expItems=data.assets.filter(a=>a.yearBE&&ageOf(a)>=a.life);
+  const expBudget=expItems.reduce((t,a)=>t+a.price*a.qty,0);
+  const broken=data.assets.filter(a=>a.status==='เสีย').reduce((t,a)=>t+a.qty,0);
+  const fixing=data.assets.filter(a=>a.status==='ซ่อม').reduce((t,a)=>t+a.qty,0);
+  const noCode=data.assets.filter(a=>!a.code).reduce((t,a)=>t+a.qty,0);
+  const closedN=data.rooms.filter(r=>r.closed).length;
+  const le=data.lastExport;
+  const daysLe=le?Math.floor((Date.now()-new Date(le).getTime())/86400000):null;
+  document.getElementById('insightBox').innerHTML=
+    '• ครุภัณฑ์ทั้งหมด <b>'+fmt(s.total)+' ชิ้น</b> ใน '+data.rooms.length+' จุดให้บริการ<br>'+
+    '• 🔴 <b>เกินอายุ '+fmt(s.old)+' ชิ้น</b> — งบทดแทนโดยประมาณ <b>'+fmt(expBudget)+' บาท</b><br>'+
+    '• 🏫 ห้องที่หมดอายุสะสมสูงสุด: '+top3+'<br>'+
+    '• 📝 สำรวจสภาพแล้ว '+fmt(surveyedUnits)+' ชิ้น ('+survPct+'%) — ใช้ 📷 สแกนสำรวจได้ที่แท็บ ⚙️ / 🏫<br>'+
+    '• 🚧 ปิดปรับปรุง '+closedN+' ห้อง • ใช้งานไม่ได้ '+broken+' • ส่งซ่อม '+fixing+' • ไม่มีเลขครุภัณฑ์ '+noCode+' ชิ้น<br>'+
+    '• 💾 สำรองล่าสุด: '+(le||'ยังไม่เคย')+(daysLe!==null&&daysLe>7?' ⚠️ เกิน 7 วันแล้ว':'');
+}
+let chartObj=null;
+function drawChart(){
+  const rows=forecastRows();
+  if(chartObj) chartObj.destroy();
+  chartObj=new Chart(document.getElementById('forecastChart').getContext('2d'),{
+    data:{labels:rows.map(r=>r.label),
+      datasets:[
+        {type:'bar',label:'งบประมาณที่ต้องเตรียม (บาท)',data:rows.map(r=>r.budget),backgroundColor:rows.map(r=>r.sk<0?'#ef4444':r.sk>9000?'#64748b':'#f59e0b'),yAxisID:'y'},
+        {type:'line',label:'จำนวน (ชิ้น)',data:rows.map(r=>r.count),borderColor:'#38bdf8',backgroundColor:'#38bdf8',yAxisID:'y1'}
+      ]},
+    options:{responsive:true,
+      plugins:{legend:{labels:{color:'#94a3b8'}}},
+      scales:{
+        y:{ticks:{color:'#94a3b8',callback:v=>fmt(v)},grid:{color:'#334155'}},
+        y1:{position:'right',ticks:{color:'#38bdf8',stepSize:1},grid:{drawOnChartArea:false}},
+        x:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}}
+      }}
+  });
+}
+
+/* ===== ซ่อม vs เปลี่ยน ===== */
+function fillAssetSelect(sel,keep){
+  sel.innerHTML=data.assets.map(a=>'<option value="'+a.id+'">'+a.name+' ('+roomOf(a).name+')</option>').join('');
+  if(keep) sel.value=keep;
+}
+function renderRepair(){
+  fillAssetSelect(document.getElementById('logAsset'),document.getElementById('logAsset').value||undefined);
+  const rows=[...data.assets].sort((a,b)=>repairRatio(b)-repairRatio(a)||(ageOf(b)||0)-(ageOf(a)||0)).slice(0,40);
+  document.getElementById('repairBody').innerHTML=rows.map(a=>{
+    const ratio=repairRatio(a),cnt=data.logs.filter(l=>l.asset===a.id).length;
+    let rec,color='#22c55e';
+    if(a.status==='เสีย') rec='<span class="badge" style="background:#7f1d1d;color:#fca5a5">ใช้งานไม่ได้ — ควรซื้อใหม่</span>';
+    else if(a.status==='ซ่อม') rec='<span class="badge" style="background:#78350f;color:#fcd34d">ส่งซ่อม — รอประเมินค่าซ่อม</span>';
+    else if(cnt===0) rec='<span class="badge" style="background:#334155;color:#cbd5e1">ยังไม่เคยบันทึกค่าซ่อม</span>';
+    else if(ratio>=60){rec='<span class="badge" style="background:#7f1d1d;color:#fca5a5">ควรซื้อใหม่</span>';color='#ef4444';}
+    else if(ratio>=30){rec='<span class="badge" style="background:#78350f;color:#fcd34d">เฝ้าระวัง</span>';color='#f59e0b';}
+    else rec='<span class="badge" style="background:#14532d;color:#86efac">ซ่อมได้</span>';
+    return '<tr><td>'+a.name+(a.qty>1?' ×'+a.qty:'')+'</td><td>'+roomOf(a).name+'</td>'+
+      '<td>'+fmt(repairCost(a.id))+' ฿<div class="mut">'+cnt+' ครั้ง</div></td>'+
+      '<td><div class="bar"><i style="width:'+Math.min(ratio,100)+'%;background:'+color+'"></i></div>'+
+      '<div class="mut" style="margin-top:3px">'+ratio+'% ของราคาเครื่องใหม่</div></td><td>'+rec+'</td></tr>';
+  }).join('');
+  const logs=[...data.logs].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
+  document.getElementById('logBody').innerHTML=logs.map(l=>{
+    const a=data.assets.find(x=>x.id===l.asset)||{name:'(ถูกลบแล้ว)'};
+    return '<tr><td>'+l.date+'</td><td>'+a.name+'</td><td>'+fmt(l.cost)+' ฿</td><td>'+(l.note||'-')+'</td></tr>';
+  }).join('')||'<tr><td colspan="4" class="mut">ยังไม่มีประวัติการซ่อม</td></tr>';
+}
+
+/* ===== รายห้อง ===== */
+let selectedRoom=1;
+function renderRooms(){
+  document.getElementById('roomGrid').innerHTML=data.rooms.map(r=>{
+    const items=data.assets.filter(a=>a.room===r.id);
+    const n={new:0,mid:0,old:0,unknown:0};
+    items.forEach(a=>n[ageStatus(a).key]+=a.qty);
+    const total=items.reduce((t,a)=>t+a.qty,0);
+    const sv=items.filter(a=>a.status!=='').reduce((t,a)=>t+a.qty,0);
+    return '<div class="room'+(r.id===selectedRoom?' sel':'')+'" onclick="selectRoom('+r.id+')">'+
+      '<div class="code">['+(r.code||'-')+']'+(r.b?' อาคาร '+r.b:'')+(r.f&&r.f!=='-'?' ชั้น '+r.f:'')+(r.closed?' <span class="closedTag">ปิดปรับปรุง</span>':'')+'</div>'+
+      '<div style="font-weight:600;margin:5px 0">'+r.name+'</div>'+
+      '<div class="mut">'+fmt(total)+' ชิ้น • สำรวจปี '+(r.y||'-')+' • สำรวจสภาพแล้ว '+sv+'/'+fmt(total)+'</div>'+
+      '<div class="dots" style="margin-top:7px"><span style="background:#22c55e"></span> '+n.new+
+      ' &nbsp;<span style="background:#f59e0b"></span> '+n.mid+
+      ' &nbsp;<span style="background:#ef4444"></span> '+n.old+
+      ' &nbsp;<span style="background:#64748b"></span> '+n.unknown+'</div></div>';
+  }).join('')||'<div class="mut">ยังไม่มีห้อง — เพิ่มได้ที่หัวข้อ "จัดการห้อง" ด้านล่าง</div>';
+  const r=data.rooms.find(x=>x.id===selectedRoom);
+  if(!r){ document.getElementById('roomDetailTitle').textContent=''; document.getElementById('roomDetailBody').innerHTML=''; }
+  else{
+    const items=data.assets.filter(a=>a.room===r.id);
+    const sv=items.filter(a=>a.status!=='').reduce((t,a)=>t+a.qty,0);
+    const total=items.reduce((t,a)=>t+a.qty,0);
+    document.getElementById('roomDetailTitle').textContent='รายการครุภัณฑ์ใน '+r.name+(r.closed?' (ปิดปรับปรุง)':'')+' — สำรวจสภาพแล้ว '+sv+'/'+fmt(total)+' ชิ้น';
+    document.getElementById('roomDetailBody').innerHTML=items.map(a=>
+      '<tr><td class="mut">'+(a.code||'-')+'</td><td>'+a.name+(a.note?'<div class="mut">'+a.note+'</div>':'')+'</td>'+
+      '<td>'+(a.yearBE||'-')+'</td><td>'+ageBadge(a)+'</td><td>'+condBadge(a)+'</td>'+
+      '<td class="mut">'+(a.surveyedAt||'-')+'</td><td>'+a.qty+'</td>'+
+      '<td style="white-space:nowrap"><button class="ghost" onclick="openEditAsset('+a.id+')" title="แก้ไข">✏️</button> '+
+      '<button class="ghost" onclick="renderLabels([data.assets.find(x=>x.id==='+a.id+')])" title="พิมพ์ QR">🏷</button></td></tr>'
+    ).join('')||'<tr><td colspan="8" class="mut">ไม่มีครุภัณฑ์ในห้องนี้</td></tr>';
+  }
+  const adm=isAdmin();
+  document.getElementById('roomAdminBody').innerHTML=data.rooms.map(r=>{
+    const cnt=data.assets.filter(a=>a.room===r.id).reduce((t,a)=>t+a.qty,0);
+    let act='<button class="ghost" onclick="editRoom('+r.id+')">✏️</button> <button class="danger" onclick="deleteRoom('+r.id+')">🗑</button>';
+    return '<tr><td>'+(r.code||'-')+'</td><td>'+r.name+'</td><td>'+(r.b||'-')+' / '+(r.f||'-')+'</td><td>'+(r.y||'-')+'</td>'+
+      '<td>'+(r.closed?'<span class="closedTag">ปิดปรับปรุง</span>':'เปิดใช้งาน')+'</td><td>'+fmt(cnt)+'</td>'+
+      '<td style="white-space:nowrap">'+(adm?act:'<span class="mut">🔐</span>')+'</td></tr>';
+  }).join('');
+}
+function selectRoom(id){ selectedRoom=id; renderRooms(); }
+
+/* ===== จัดการครุภัณฑ์ ===== */
+function currentFilteredAssets(){
+  const kw=(document.getElementById('searchBox').value||'').toLowerCase();
+  const f=document.getElementById('filterBox').value;
+  return data.assets.filter(a=>{
+    if(kw && (a.name+' '+(a.code||'')+' '+roomOf(a).name).toLowerCase().indexOf(kw)<0) return false;
+    const g=ageOf(a);
+    switch(f){
+      case 'old': return a.yearBE&&g>=a.life;
+      case 'mid': return a.yearBE&&g>=4&&g<a.life;
+      case 'new': return a.yearBE&&g<4;
+      case 'unknown': return !a.yearBE;
+      case 'เสีย': return a.status==='เสีย';
+      case 'ซ่อม': return a.status==='ซ่อม';
+      case 'unsurveyed': return a.status==='';
+      case 'nocode': return !a.code;
+      default: return true;
+    }
+  });
+}
+function renderAssets(){
+  const adm=isAdmin();
+  document.getElementById('assetCount').textContent=data.assets.length;
+  document.getElementById('unitCount').textContent=fmt(data.assets.reduce((t,a)=>t+a.qty,0));
+  const rows=currentFilteredAssets();
+  document.getElementById('assetBody').innerHTML=rows.map(a=>{
+    let act='<button class="ghost" onclick="openEditAsset('+a.id+')" title="แก้ไข">✏️</button> '+
+      '<button class="ghost" onclick="renderLabels([data.assets.find(x=>x.id==='+a.id+')])" title="พิมพ์ QR">🏷</button> '+
+      '<button class="ghost" onclick="jumpToLog('+a.id+')" title="บันทึกค่าซ่อม">📝</button>';
+    if(adm) act+=' <button class="danger" onclick="deleteAsset('+a.id+')" title="ลบ">🗑</button>';
+    return '<tr><td class="mut">'+(a.code||'-')+'</td><td>'+a.name+'</td><td>'+roomOf(a).name+'</td>'+
+      '<td>'+(a.yearBE||'-')+'</td><td>'+ageBadge(a)+'</td><td>'+condBadge(a)+'</td>'+
+      '<td class="mut">'+(a.surveyedAt||'-')+'</td><td>'+a.qty+'</td>'+
+      '<td style="white-space:nowrap">'+act+'</td></tr>';
+  }).join('')||'<tr><td colspan="9" class="mut">ไม่พบรายการ</td></tr>';
+}
+function deleteAsset(id){
+  if(!isAdmin()) return;
+  const a=data.assets.find(x=>x.id===id); if(!a) return;
+  if(!confirm('ลบ "'+a.name+'" และประวัติการซ่อมทั้งหมด?')) return;
+  data.assets=data.assets.filter(x=>x.id!==id);
+  data.logs=data.logs.filter(l=>l.asset!==id);
+  save(); renderAll(); toast('ลบรายการแล้ว');
+}
+function jumpToLog(id){ switchTab('repair'); document.getElementById('logAsset').value=id; }
+document.getElementById('logForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  data.logs.push({id:nextId(data.logs),asset:Number(document.getElementById('logAsset').value),
+    date:document.getElementById('logDate').value,cost:Number(document.getElementById('logCost').value),
+    note:document.getElementById('logNote').value.trim()});
+  save();
+  document.getElementById('logCost').value=''; document.getElementById('logNote').value='';
+  renderAll(); toast('บันทึกค่าซ่อมแล้ว ✅');
+});
+function exportData(){
+  data.lastExport=todayISO(); save();
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='kllc-backup-'+todayISO()+'.json'; a.click();
+  toast('ส่งออกไฟล์สำรองแล้ว ⬇️');
+}
+function importData(ev){
+  const file=ev.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{const d=JSON.parse(reader.result);
+      if(!d.rooms||!d.assets||!d.logs) throw 0;
+      d.excluded=d.excluded||[]; d.tasks=d.tasks&&d.tasks.length?d.tasks:data.tasks;
+      d.checks=d.checks||{}; d.settings=data.settings;
+      d.assets.forEach(a=>{ if(a.surveyedAt===undefined) a.surveyedAt=null; });
+      data=d; save(); updateAdminUI(); renderAll(); toast('นำเข้าข้อมูลสำเร็จ ✅');
+    }catch(e){ alert('ไฟล์ไม่ถูกต้อง'); }
+  };
+  reader.readAsText(file); ev.target.value='';
+}
+function exportCsv(){
+  let csv='\ufeffเลขครุภัณฑ์,รายการ,ห้อง,ปีที่ซื้อ,อายุ(ปี),จำนวน,ราคา/หน่วย,สภาพ,สำรวจล่าสุด,หมายเหตุ\n';
+  data.assets.forEach(a=>{
+    const st=a.status==='ok'?'ใช้งานได้':a.status==='เสีย'?'ใช้งานไม่ได้':a.status==='ซ่อม'?'ส่งซ่อม':'ยังไม่สำรวจ';
+    csv+='"'+(a.code||'')+'","'+a.name+'","'+roomOf(a).name+'",'+(a.yearBE||'')+','+(ageOf(a)===null?'':ageOf(a))+','+a.qty+','+a.price+',"'+st+'","'+(a.surveyedAt||'')+'","'+(a.note||'')+'"\n';
+  });
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='kllc-assets-'+todayISO()+'.csv'; a.click();
+  toast('ส่งออก CSV แล้ว 📄');
+}
+function resetData(){
+  if(!confirm('คืนค่าข้อมูลสำรวจ งปม.69? ข้อมูลที่แก้ไขจะถูกลบ')) return;
+  data=makeSeed(); save(); updateAdminUI(); renderAll(); toast('คืนค่าข้อมูลตั้งต้นแล้ว ♻️');
+}
+
+/* ===== ของบประมาณ ===== */
+let propGroups=[];
+function renderProposal(){
+  const items=expiredList();
+  const groups={};
+  items.forEach(a=>{
+    const rs=[];
+    if(a.yearBE&&ageOf(a)>=a.life) rs.push('เกินอายุ (ซื้อปี '+a.yearBE+')');
+    if(a.status==='เสีย') rs.push('ใช้งานไม่ได้');
+    if(repairRatio(a)>=60) rs.push('ค่าซ่อมสะสม '+repairRatio(a)+'%');
+    const k=a.room+'|'+a.name+'|'+rs.join('/');
+    if(!groups[k]) groups[k]={key:k,room:roomOf(a).name,name:a.name,qty:0,price:a.price,reason:rs.join(', ')};
+    groups[k].qty+=a.qty;
+  });
+  propGroups=Object.values(groups).sort((x,y)=>(y.qty*y.price)-(x.qty*x.price));
+  data.excluded=data.excluded||[];
+  const sel=propGroups.filter(g=>data.excluded.indexOf(g.key)<0);
+  const total=sel.reduce((s,g)=>s+g.qty*g.price,0);
+  const yr=curBE();
+  document.getElementById('proposalPick').innerHTML=propGroups.length?propGroups.map((g,i)=>{
+    const inc=data.excluded.indexOf(g.key)<0;
+    return '<tr><td><input type="checkbox" '+(inc?'checked':'')+' onchange="toggleProposal('+i+')"></td>'+
+      '<td>'+g.name+'</td><td>'+g.room+'</td><td>'+g.qty+'</td><td class="mut">'+g.reason+'</td>'+
+      '<td style="text-align:right">'+fmt(g.qty*g.price)+' ฿</td></tr>';
+  }).join(''):'<tr><td colspan="6" class="mut">ไม่มีรายการที่เข้าเกณฑ์</td></tr>';
+  let html='<div style="text-align:center;font-weight:700;font-size:18px;margin-bottom:14px">บันทึกข้อความ</div>'+
+    '<p><b>ส่วนราชการ:</b> ฝ่ายเทคโนโลยีและพื้นที่การเรียนรู้ สำนักการเรียนรู้ตลอดชีวิตฯ สจล. (KLLC)</p>'+
+    '<p><b>วันที่:</b> '+thaiToday()+'</p>'+
+    '<p><b>เรื่อง:</b> ขออนุมัติงบประมาณจัดซื้อครุภัณฑ์โสตทัศนูปกรณ์ทดแทน ประจำปีงบประมาณ พ.ศ. '+yr+'</p>'+
+    '<p style="text-indent:2em">ด้วยฝ่ายเทคโนโลยีและพื้นที่การเรียนรู้ได้ดำเนินการสำรวจครุภัณฑ์โสตทัศนูปกรณ์ พบว่ามีครุภัณฑ์ที่หมดอายุการใช้งานตามเกณฑ์หรือใช้งานไม่ได้ จึงเห็นควรขออนุมัติงบประมาณจัดซื้อทดแทน ดังรายการต่อไปนี้</p>';
+  if(sel.length){
+    html+='<table><thead><tr><th>ลำดับ</th><th>รายการ</th><th>ห้อง/จุดติดตั้ง</th><th>จำนวน</th><th>เหตุผล</th><th>ราคา/หน่วย (บาท)</th><th>รวม (บาท)</th></tr></thead><tbody>';
+    sel.forEach((g,i)=>{
+      html+='<tr><td style="text-align:center">'+(i+1)+'</td><td>'+g.name+'</td><td>'+g.room+'</td>'+
+        '<td style="text-align:center">'+g.qty+'</td><td>'+g.reason+'</td>'+
+        '<td style="text-align:right">'+fmt(g.price)+'</td><td style="text-align:right">'+fmt(g.qty*g.price)+'</td></tr>';
+    });
+    html+='<tr><td colspan="6" style="text-align:right;font-weight:700">รวมทั้งสิ้น</td><td style="text-align:right;font-weight:700">'+fmt(total)+'</td></tr></tbody></table>';
+  } else html+='<p style="text-indent:2em">ยังไม่ได้เลือกรายการใด ๆ — กรุณาติ๊กเลือกในตารางด้านบน</p>';
+  html+='<br><p style="text-indent:2em">จึงเรียนมาเพื่อโปรดพิจารณาอนุมัติงบประมาณจำนวน <b>'+fmt(total)+' บาท</b> เพื่อดำเนินการจัดซื้อครุภัณฑ์ทดแทนตามรายการข้างต้น จะเป็นพระคุณ</p>'+
+    '<p class="mut" style="margin-top:8px">* ราคาต่อหน่วยเป็นราคาประเมินเบื้องต้น ควรสืบราคากลางก่อนจัดซื้อจริง</p>'+
+    '<br><br><div style="text-align:center">ลงชื่อ ______________________<br>(______________________)<br>ผู้เสนอเรื่อง</div>';
+  document.getElementById('proposalDoc').innerHTML=html;
+}
+function toggleProposal(i){
+  const g=propGroups[i]; if(!g) return;
+  data.excluded=data.excluded||[];
+  const ix=data.excluded.indexOf(g.key);
+  if(ix>-1) data.excluded.splice(ix,1); else data.excluded.push(g.key);
+  save(); renderProposal();
+}
+function selectAllProposal(on){
+  data.excluded=on?[]:propGroups.map(g=>g.key);
+  save(); renderProposal();
+}
+
+/* ===== แจ้งเตือน ===== */
+function renderAlerts(){
+  const byRoom={};
+  data.assets.forEach(a=>{ if(a.yearBE&&ageOf(a)>=a.life){ if(!byRoom[a.room])byRoom[a.room]={count:0,budget:0}; byRoom[a.room].count+=a.qty; byRoom[a.room].budget+=a.price*a.qty; }});
+  const rows=Object.entries(byRoom).map(([rid,v])=>({room:data.rooms.find(r=>r.id===Number(rid)),count:v.count,budget:v.budget})).sort((x,y)=>y.count-x.count);
+  const s=computeStats();
+  const expBudget=rows.reduce((t,r)=>t+r.budget,0);
+  document.getElementById('lineMsg').textContent=
+    '⚠️ KLLC Asset Alert (พ.ศ. '+curBE()+')\n'+
+    '• ทั้งหมด '+fmt(s.total)+' ชิ้น ใน '+data.rooms.length+' จุด\n'+
+    '• 🔴 เกินอายุ '+fmt(s.old)+' ชิ้น — งบเปลี่ยนใหม่ ≈ '+fmt(expBudget)+' บาท\n'+
+    (rows.length?'• ห้องที่หนักสุด: '+rows.slice(0,3).map(r=>r.room.name+' ('+r.count+')').join(', ')+'\n':'')+
+    '\nโปรดเสนอของบประมาณทดแทนผ่านแท็บ "📄 ของบประมาณ"';
+  document.getElementById('alertBody').innerHTML=rows.map(r=>
+    '<tr><td>'+r.room.name+(r.room.closed?' <span class="closedTag">ปิดปรับปรุง</span>':'')+'</td><td>'+fmt(r.count)+' ชิ้น</td><td>'+fmt(r.budget)+' ฿</td></tr>'
+  ).join('')||'<tr><td colspan="3" class="mut">ไม่มีรายการเฝ้าระวัง</td></tr>';
+}
+function copyAlert(){
+  navigator.clipboard.writeText(document.getElementById('lineMsg').textContent)
+    .then(()=>toast('คัดลอกข้อความแจ้งเตือนแล้ว 📋')).catch(()=>toast('คัดลอกไม่สำเร็จ'));
+}
+
+/* ===== สลับแท็บ + เริ่มต้น ===== */
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  document.querySelectorAll('section[id^="tab-"]').forEach(sec=>sec.classList.toggle('hidden',sec.id!=='tab-'+name));
+  if(name==='overview') drawChart();
+}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+
+function renderAll(){
+  renderOverview(); renderChecklist(); renderRepair(); renderRooms(); renderAssets(); renderProposal(); renderAlerts();
+  if(!document.getElementById('tab-overview').classList.contains('hidden')) drawChart();
+}
+
+data=loadData();
+save();
+document.getElementById('logDate').value=todayISO();
+document.getElementById('checkDate').value=todayISO();
+updateAdminUI();
+renderAll();
+</script>
+</body>
+</html>
