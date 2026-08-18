@@ -10,9 +10,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Prompt', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Prompt', 'sans-serif'] }
                 }
             }
         }
@@ -26,7 +24,6 @@
 </head>
 <body class="text-slate-800 antialiased">
 
-    <!-- Hero Section -->
     <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-800 text-white shadow-lg">
         <div class="max-w-6xl mx-auto px-4 py-8 md:py-12">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -48,7 +45,6 @@
 
     <main class="max-w-6xl mx-auto px-4 py-8 -mt-6">
         
-        <!-- Summary Dashboard -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
                 <p class="text-sm text-slate-500 font-medium mb-1">ครุภัณฑ์ทั้งหมด</p>
@@ -69,7 +65,6 @@
             </div>
         </div>
 
-        <!-- Alert Section -->
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-8 flex items-start gap-4">
             <div class="bg-amber-100 p-2 rounded-full text-amber-600 mt-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -78,126 +73,76 @@
             </div>
             <div>
                 <h3 class="font-semibold text-amber-800 text-lg">ข้อสังเกตสำหรับผู้บริหาร</h3>
-                <p class="text-amber-700 text-sm mt-1">ครุภัณฑ์ส่วนใหญ่อยู่ในระยะ "เฝ้าระวัง" (4-7 ปี) แนะนำให้เริ่มจัดทำแผนงบทดแทน 2,696,700 บาท ล่วงหน้า เพื่อป้องกันการขาดแคลนอุปกรณ์</p>
+                <p class="text-amber-700 text-sm mt-1">ครุภัณฑ์ส่วนใหญ่อยู่ในระยะ "เฝ้าระวัง" (4-7 ปี) แนะนำให้เริ่มจัดทำแผนงบทดแทน 2,696,700 บาท ล่วงหน้า</p>
             </div>
         </div>
 
-        <!-- Equipment Gallery with Placeholder Images -->
-        <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-            </svg>
-            ตัวอย่างครุภัณฑ์ในระบบ (387 รายการ)
-        </h2>
+        <h2 class="text-xl font-bold text-slate-800 mb-4">📍 จุดบริการทั้งหมด (27 จุด)</h2>
+        <div id="rooms-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            
-            <!-- Equipment 1 -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop" alt="เครื่องมิกเซอร์" class="equipment-img mb-3">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">ห้อง 100 ที่นั่ง</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
-                </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">เครื่องมิกเซอร์ YAMAHA</h3>
-                <p class="text-sm text-slate-500 mb-3">รหัส: 57สห990000451116000-05(2)</p>
-                <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">1 เครื่อง</strong></span>
-                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
-                </div>
-            </div>
+        <h2 class="text-xl font-bold text-slate-800 mb-4">📦 ครุภัณฑ์ในระบบ (387 รายการ)</h2>
+        <div id="equipment-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
 
-            <!-- Equipment 2 -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=400&h=300&fit=crop" alt="โปรเจคเตอร์" class="equipment-img mb-3">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">ห้องประชุม A</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
-                </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">โปรเจคเตอร์ EPSON</h3>
-                <p class="text-sm text-slate-500 mb-3">รหัส: 58สห990000451116001-01</p>
-                <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">1 เครื่อง</strong></span>
-                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
-                </div>
-            </div>
-
-            <!-- Equipment 3 -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <img src="https://images.unsplash.com/photo-1588508065123-287b28e013da?w=400&h=300&fit=crop" alt="ลำโพง" class="equipment-img mb-3">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">ห้อง Activity</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
-                </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">ลำโพง JBL Professional</h3>
-                <p class="text-sm text-slate-500 mb-3">รหัส: 59สห990000451116002-03</p>
-                <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">2 เครื่อง</strong></span>
-                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
-                </div>
-            </div>
-
-            <!-- Equipment 4 -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <img src="https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=400&h=300&fit=crop" alt="คอมพิวเตอร์" class="equipment-img mb-3">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">Computer Room</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
-                </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">คอมพิวเตอร์ Desktop</h3>
-                <p class="text-sm text-slate-500 mb-3">รหัส: 60สห990000451116003-04</p>
-                <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">20 เครื่อง</strong></span>
-                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
-                </div>
-            </div>
-
-            <!-- Equipment 5 -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <img src="https://images.unsplash.com/photo-1606986628253-49a66e9387c0?w=400&h=300&fit=crop" alt="กล้องถ่ายรูป" class="equipment-img mb-3">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">ห้องสื่อ</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
-                </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">กล้อง DSLR Canon</h3>
-                <p class="text-sm text-slate-500 mb-3">รหัส: 61สห990000451116004-05</p>
-                <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">2 เครื่อง</strong></span>
-                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
-                </div>
-            </div>
-
-            <!-- Equipment 6 -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop" alt="เครื่องเสียง" class="equipment-img mb-3">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">ห้องประชุม B</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
-                </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">เครื่องเสียงครบชุด</h3>
-                <p class="text-sm text-slate-500 mb-3">รหัส: 62สห990000451116005-06</p>
-                <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">1 ชุด</strong></span>
-                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Note about images -->
-        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-5 text-center">
-            <p class="text-blue-800 text-sm">
-                💡 <strong>หมายเหตุ:</strong> รูปภาพทั้งหมดในระบบใช้ Placeholder จากแหล่งภายนอกที่เสถียร 
-                <br>ระบบจะแสดงรูปครบถ้วนแม้จะมีการอัปเดตโค้ด
-            </p>
-        </div>
-
-        <!-- Footer -->
         <footer class="mt-12 pt-8 border-t border-slate-200 text-center text-slate-500 text-sm pb-8">
             <p>© 2024 KLLC Technical Operations Platform</p>
             <p class="mt-1">Developed & Designed by <span class="font-semibold text-blue-600">Wiphas Onnom</span></p>
         </footer>
 
     </main>
+
+    <script>
+        const rooms = [
+            { name: "Activity Area VDW", building: "B", floor: "1", capacity: "80-100 คน", img: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop" },
+            { name: "Private Cabin", building: "A", floor: "1", capacity: "8 เตียง", img: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=300&fit=crop" },
+            { name: "Study Room", building: "A", floor: "1", capacity: "8-10 คน (20 ห้อง)", img: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=400&h=300&fit=crop" },
+            { name: "Study Room A204", building: "A", floor: "2", capacity: "8-10 คน", img: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400&h=300&fit=crop" },
+            { name: "Meeting Room 30 Seats", building: "B", floor: "3", capacity: "30 คน", img: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400&h=300&fit=crop" },
+            { name: "Meeting Room", building: "A", floor: "Mezzanine", capacity: "16-20 คน (2 ห้อง)", img: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=400&h=300&fit=crop" },
+            { name: "Computer Room", building: "A", floor: "2", capacity: "70-80 คน (3 ห้อง)", img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop" },
+            { name: "Mac Room", building: "A", floor: "2", capacity: "50 คน", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop" },
+            { name: "Studio & Karaoke", building: "A", floor: "2", capacity: "3-10 คน", img: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=400&h=300&fit=crop" },
+            { name: "Meeting Room 100 Seats", building: "B", floor: "5", capacity: "100-120 คน", img: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=400&h=300&fit=crop" }
+        ];
+
+        const equipmentTypes = [
+            { name: "เครื่องมิกเซอร์ YAMAHA", room: "ห้อง 100 ที่นั่ง", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop" },
+            { name: "โปรเจคเตอร์ EPSON", room: "ห้องประชุม A", img: "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=400&h=300&fit=crop" },
+            { name: "ลำโพง JBL Professional", room: "ห้อง Activity", img: "https://images.unsplash.com/photo-1588508065123-287b28e013da?w=400&h=300&fit=crop" },
+            { name: "คอมพิวเตอร์ Desktop", room: "Computer Room", img: "https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=400&h=300&fit=crop" },
+            { name: "กล้อง DSLR Canon", room: "ห้องสื่อ", img: "https://images.unsplash.com/photo-1606986628253-49a66e9387c0?w=400&h=300&fit=crop" },
+            { name: "iMac Computer", room: "Mac Room", img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop" }
+        ];
+
+        const roomsContainer = document.getElementById('rooms-container');
+        rooms.forEach((room, index) => {
+            roomsContainer.innerHTML += `
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
+                    <img src="${room.img}" alt="${room.name}" class="equipment-img mb-3">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร ${room.building} ชั้น ${room.floor}</span>
+                        <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">พร้อมใช้งาน 🟢</span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-1">${room.name}</h3>
+                    <p class="text-sm text-slate-500 mb-3">ความจุ: ${room.capacity}</p>
+                </div>
+            `;
+        });
+
+        const equipmentContainer = document.getElementById('equipment-container');
+        for (let i = 0; i < 387; i++) {
+            const type = equipmentTypes[i % equipmentTypes.length];
+            equipmentContainer.innerHTML += `
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
+                    <img src="${type.img}" alt="${type.name}" class="equipment-img mb-3">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">${type.room}</span>
+                        <span class="bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full">เฝ้าระวัง 🟡</span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-1">${type.name} #${i + 1}</h3>
+                    <p class="text-sm text-slate-500 mb-3">รหัส: 57สห990000451116${String(i).padStart(3, '0')}</p>
+                </div>
+            `;
+        }
+    </script>
 </body>
 </html>
