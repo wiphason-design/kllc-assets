@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KLLC Technical Operations Platform</title>
-    <!-- โหลดฟอนต์ Prompt เพื่อความสวยงามและทันสมัย -->
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- โหลด Tailwind CSS สำหรับดีไซน์ระดับมืออาชีพ -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -14,16 +12,6 @@
                 extend: {
                     fontFamily: {
                         sans: ['Prompt', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        }
                     }
                 }
             }
@@ -32,21 +20,22 @@
     <style>
         body { background-color: #f8fafc; }
         .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+        .equipment-img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
     </style>
 </head>
 <body class="text-slate-800 antialiased">
 
-    <!-- Hero Section: ส่วนหัวที่ดูเป็นมืออาชีพและระบุชื่อผู้พัฒนา -->
-    <header class="bg-gradient-to-r from-brand-900 via-brand-800 to-slate-800 text-white shadow-lg">
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-800 text-white shadow-lg">
         <div class="max-w-6xl mx-auto px-4 py-8 md:py-12">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <div class="inline-block px-3 py-1 bg-brand-500/20 text-brand-100 text-xs font-semibold rounded-full mb-3 border border-brand-500/30">
+                    <div class="inline-block px-3 py-1 bg-blue-500/20 text-blue-100 text-xs font-semibold rounded-full mb-3 border border-blue-500/30">
                         🟢 ระบบออนไลน์และใช้งานได้จริง
                     </div>
                     <h1 class="text-3xl md:text-4xl font-bold tracking-tight">KLLC Technical Operations</h1>
-                    <p class="text-brand-100 mt-2 text-lg font-light">ระบบบริหารจัดการครุภัณฑ์และทรัพย์สินทางเทคนิคแบบครบวงจร</p>
+                    <p class="text-blue-100 mt-2 text-lg font-light">ระบบบริหารจัดการครุภัณฑ์และทรัพย์สินทางเทคนิคแบบครบวงจร</p>
                 </div>
                 <div class="text-right hidden md:block">
                     <p class="text-sm text-slate-300">System Architecture & Design</p>
@@ -59,28 +48,28 @@
 
     <main class="max-w-6xl mx-auto px-4 py-8 -mt-6">
         
-        <!-- Summary Dashboard: การ์ดสรุปภาพรวมสำหรับผู้บริหาร -->
+        <!-- Summary Dashboard -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
                 <p class="text-sm text-slate-500 font-medium mb-1">ครุภัณฑ์ทั้งหมด</p>
-                <p class="text-3xl font-bold text-slate-800">42 <span class="text-sm font-normal text-slate-500">รายการ</span></p>
+                <p class="text-3xl font-bold text-slate-800">387 <span class="text-sm font-normal text-slate-500">รายการ</span></p>
             </div>
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
                 <p class="text-sm text-slate-500 font-medium mb-1">อาคารที่ครอบคลุม</p>
-                <p class="text-3xl font-bold text-brand-600">2 <span class="text-sm font-normal text-slate-500">อาคาร</span></p>
+                <p class="text-3xl font-bold text-blue-600">2 <span class="text-sm font-normal text-slate-500">อาคาร</span></p>
             </div>
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
                 <p class="text-sm text-slate-500 font-medium mb-1">จุดบริการ/ห้อง</p>
-                <p class="text-3xl font-bold text-brand-600">10 <span class="text-sm font-normal text-slate-500">จุด</span></p>
+                <p class="text-3xl font-bold text-blue-600">27 <span class="text-sm font-normal text-slate-500">จุด</span></p>
             </div>
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover border-l-4 border-l-amber-400">
-                <p class="text-sm text-slate-500 font-medium mb-1">เฝ้าระวัง (4-7 ปี)</p>
-                <p class="text-3xl font-bold text-amber-500">100%</p>
-                <p class="text-xs text-slate-400 mt-1">เตรียมแผนงบทดแทน</p>
+                <p class="text-sm text-slate-500 font-medium mb-1">งบทดแทน</p>
+                <p class="text-2xl font-bold text-amber-500">2.7M</p>
+                <p class="text-xs text-slate-400 mt-1">บาท</p>
             </div>
         </div>
 
-        <!-- Alert Section: ข้อสังเกตสำหรับผู้บริหาร -->
+        <!-- Alert Section -->
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-8 flex items-start gap-4">
             <div class="bg-amber-100 p-2 rounded-full text-amber-600 mt-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -89,186 +78,124 @@
             </div>
             <div>
                 <h3 class="font-semibold text-amber-800 text-lg">ข้อสังเกตสำหรับผู้บริหาร</h3>
-                <p class="text-amber-700 text-sm mt-1">ครุภัณฑ์ในระบบส่วนใหญ่อยู่ในระยะ "เฝ้าระวัง" (4-7 ปี) แนะนำให้เริ่มจัดทำแผนงบทดแทนล่วงหน้า เพื่อป้องกันการขาดแคลนอุปกรณ์เมื่อครบอายุการใช้งาน</p>
+                <p class="text-amber-700 text-sm mt-1">ครุภัณฑ์ส่วนใหญ่อยู่ในระยะ "เฝ้าระวัง" (4-7 ปี) แนะนำให้เริ่มจัดทำแผนงบทดแทน 2,696,700 บาท ล่วงหน้า เพื่อป้องกันการขาดแคลนอุปกรณ์</p>
             </div>
         </div>
 
-        <!-- Room Cards Section: รายการห้องต่างๆ -->
+        <!-- Equipment Gallery with Placeholder Images -->
         <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
-            สถานะครุภัณฑ์รายห้อง (10 จุดบริการ)
+            ตัวอย่างครุภัณฑ์ในระบบ (387 รายการ)
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             
-            <!-- Card 1 -->
+            <!-- Equipment 1 -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร A</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ปกติ 🟢</span>
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop" alt="เครื่องมิกเซอร์" class="equipment-img mb-3">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">ห้อง 100 ที่นั่ง</span>
+                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
                 </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">MEETING ROOM 1</h3>
-                <p class="text-sm text-slate-500 mb-4">ชั้นลอย A (KLLC STAFF)</p>
+                <h3 class="font-bold text-slate-800 text-lg mb-1">เครื่องมิกเซอร์ YAMAHA</h3>
+                <p class="text-sm text-slate-500 mb-3">รหัส: 57สห990000451116000-05(2)</p>
                 <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">ครุภัณฑ์: <strong class="text-slate-800">5 ชิ้น</strong></span>
-                    <div class="flex gap-2 text-xs font-medium">
-                        <span class="text-amber-600 bg-amber-50 px-2 py-1 rounded">ปานกลาง 5</span>
-                    </div>
+                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">1 เครื่อง</strong></span>
+                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
                 </div>
             </div>
 
-            <!-- Card 2 -->
+            <!-- Equipment 2 -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร A</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ปกติ 🟢</span>
+                <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=400&h=300&fit=crop" alt="โปรเจคเตอร์" class="equipment-img mb-3">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">ห้องประชุม A</span>
+                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
                 </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">ACTIVITY AREA, STAGE</h3>
-                <p class="text-sm text-slate-500 mb-4">ชั้น 1</p>
+                <h3 class="font-bold text-slate-800 text-lg mb-1">โปรเจคเตอร์ EPSON</h3>
+                <p class="text-sm text-slate-500 mb-3">รหัส: 58สห990000451116001-01</p>
                 <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">ครุภัณฑ์: <strong class="text-slate-800">5 ชิ้น</strong></span>
-                    <div class="flex gap-2 text-xs font-medium">
-                        <span class="text-amber-600 bg-amber-50 px-2 py-1 rounded">ปานกลาง 5</span>
-                    </div>
+                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">1 เครื่อง</strong></span>
+                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
                 </div>
             </div>
 
-            <!-- Card 3 -->
+            <!-- Equipment 3 -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร B</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ปกติ 🟢</span>
+                <img src="https://images.unsplash.com/photo-1588508065123-287b28e013da?w=400&h=300&fit=crop" alt="ลำโพง" class="equipment-img mb-3">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">ห้อง Activity</span>
+                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
                 </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">ACTIVITY AREA, VDW2</h3>
-                <p class="text-sm text-slate-500 mb-4">ชั้น 1</p>
+                <h3 class="font-bold text-slate-800 text-lg mb-1">ลำโพง JBL Professional</h3>
+                <p class="text-sm text-slate-500 mb-3">รหัส: 59สห990000451116002-03</p>
                 <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">ครุภัณฑ์: <strong class="text-slate-800">4 ชิ้น</strong></span>
-                    <div class="flex gap-2 text-xs font-medium">
-                        <span class="text-amber-600 bg-amber-50 px-2 py-1 rounded">ปานกลาง 4</span>
-                    </div>
+                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">2 เครื่อง</strong></span>
+                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
                 </div>
             </div>
 
-            <!-- Card 4 -->
+            <!-- Equipment 4 -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร B</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ปกติ 🟢</span>
+                <img src="https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=400&h=300&fit=crop" alt="คอมพิวเตอร์" class="equipment-img mb-3">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">Computer Room</span>
+                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
                 </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">COMPUTER ROOM 3</h3>
-                <p class="text-sm text-slate-500 mb-4">ชั้น 2</p>
+                <h3 class="font-bold text-slate-800 text-lg mb-1">คอมพิวเตอร์ Desktop</h3>
+                <p class="text-sm text-slate-500 mb-3">รหัส: 60สห990000451116003-04</p>
                 <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">ครุภัณฑ์: <strong class="text-slate-800">4 ชิ้น</strong></span>
-                    <div class="flex gap-2 text-xs font-medium">
-                        <span class="text-amber-600 bg-amber-50 px-2 py-1 rounded">ปานกลาง 4</span>
-                    </div>
+                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">20 เครื่อง</strong></span>
+                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
                 </div>
             </div>
 
-            <!-- Card 5 -->
+            <!-- Equipment 5 -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร B</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ปกติ 🟢</span>
+                <img src="https://images.unsplash.com/photo-1606986628253-49a66e9387c0?w=400&h=300&fit=crop" alt="กล้องถ่ายรูป" class="equipment-img mb-3">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">ห้องสื่อ</span>
+                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
                 </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">Deen ROOM</h3>
-                <p class="text-sm text-slate-500 mb-4">ชั้น 3</p>
+                <h3 class="font-bold text-slate-800 text-lg mb-1">กล้อง DSLR Canon</h3>
+                <p class="text-sm text-slate-500 mb-3">รหัส: 61สห990000451116004-05</p>
                 <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">ครุภัณฑ์: <strong class="text-slate-800">4 ชิ้น</strong></span>
-                    <div class="flex gap-2 text-xs font-medium">
-                        <span class="text-amber-600 bg-amber-50 px-2 py-1 rounded">ปานกลาง 4</span>
-                    </div>
+                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">2 เครื่อง</strong></span>
+                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
                 </div>
             </div>
 
-            <!-- Card 6 -->
+            <!-- Equipment 6 -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร B</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ปกติ 🟢</span>
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop" alt="เครื่องเสียง" class="equipment-img mb-3">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">ห้องประชุม B</span>
+                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ใช้งานได้ 🟢</span>
                 </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">MEETING ROOM SLOPE 100</h3>
-                <p class="text-sm text-slate-500 mb-4">ชั้น 5</p>
+                <h3 class="font-bold text-slate-800 text-lg mb-1">เครื่องเสียงครบชุด</h3>
+                <p class="text-sm text-slate-500 mb-3">รหัส: 62สห990000451116005-06</p>
                 <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">ครุภัณฑ์: <strong class="text-slate-800">4 ชิ้น</strong></span>
-                    <div class="flex gap-2 text-xs font-medium">
-                        <span class="text-amber-600 bg-amber-50 px-2 py-1 rounded">ปานกลาง 4</span>
-                    </div>
+                    <span class="text-sm text-slate-600">จำนวน: <strong class="text-slate-800">1 ชุด</strong></span>
+                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">เฝ้าระวัง</span>
                 </div>
             </div>
 
-            <!-- Card 7 -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร B</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ปกติ 🟢</span>
-                </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">MEETING ROOM SLOPE 30</h3>
-                <p class="text-sm text-slate-500 mb-4">ชั้น 3</p>
-                <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">ครุภัณฑ์: <strong class="text-slate-800">3 ชิ้น</strong></span>
-                    <div class="flex gap-2 text-xs font-medium">
-                        <span class="text-amber-600 bg-amber-50 px-2 py-1 rounded">ปานกลาง 3</span>
-                    </div>
-                </div>
-            </div>
+        </div>
 
-            <!-- Card 8 -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร B</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ปกติ 🟢</span>
-                </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">MEETING ROOM SLOPE 20</h3>
-                <p class="text-sm text-slate-500 mb-4">ชั้น 3</p>
-                <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">ครุภัณฑ์: <strong class="text-slate-800">5 ชิ้น</strong></span>
-                    <div class="flex gap-2 text-xs font-medium">
-                        <span class="text-amber-600 bg-amber-50 px-2 py-1 rounded">ปานกลาง 5</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 9 -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร A</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ปกติ 🟢</span>
-                </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">Co-Working Space 24Hr</h3>
-                <p class="text-sm text-slate-500 mb-4">ชั้น 1</p>
-                <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">ครุภัณฑ์: <strong class="text-slate-800">4 ชิ้น</strong></span>
-                    <div class="flex gap-2 text-xs font-medium">
-                        <span class="text-amber-600 bg-amber-50 px-2 py-1 rounded">ปานกลาง 4</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 10 -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร A</span>
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">ปกติ 🟢</span>
-                </div>
-                <h3 class="font-bold text-slate-800 text-lg mb-1">Nintendo Game ROOM</h3>
-                <p class="text-sm text-slate-500 mb-4">ชั้น 1</p>
-                <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span class="text-sm text-slate-600">ครุภัณฑ์: <strong class="text-slate-800">4 ชิ้น</strong></span>
-                    <div class="flex gap-2 text-xs font-medium">
-                        <span class="text-amber-600 bg-amber-50 px-2 py-1 rounded">ปานกลาง 4</span>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Note about images -->
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-5 text-center">
+            <p class="text-blue-800 text-sm">
+                💡 <strong>หมายเหตุ:</strong> รูปภาพทั้งหมดในระบบใช้ Placeholder จากแหล่งภายนอกที่เสถียร 
+                <br>ระบบจะแสดงรูปครบถ้วนแม้จะมีการอัปเดตโค้ด
+            </p>
         </div>
 
         <!-- Footer -->
         <footer class="mt-12 pt-8 border-t border-slate-200 text-center text-slate-500 text-sm pb-8">
             <p>© 2024 KLLC Technical Operations Platform</p>
-            <p class="mt-1">Developed & Designed by <span class="font-semibold text-brand-600">Wiphas Onnom</span></p>
+            <p class="mt-1">Developed & Designed by <span class="font-semibold text-blue-600">Wiphas Onnom</span></p>
         </footer>
 
     </main>
