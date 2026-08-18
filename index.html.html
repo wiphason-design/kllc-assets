@@ -9,9 +9,7 @@
     <script>
         tailwind.config = {
             theme: {
-                extend: {
-                    fontFamily: { sans: ['Prompt', 'sans-serif'] }
-                }
+                extend: { fontFamily: { sans: ['Prompt', 'sans-serif'] } }
             }
         }
     </script>
@@ -19,16 +17,15 @@
         body { background-color: #f8fafc; }
         .card-hover { transition: all 0.3s ease; }
         .card-hover:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
-        .equipment-img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
     </style>
 </head>
 <body class="text-slate-800 antialiased">
 
-    <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-800 text-white shadow-lg">
+    <header class="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white shadow-lg">
         <div class="max-w-6xl mx-auto px-4 py-8 md:py-12">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <div class="inline-block px-3 py-1 bg-blue-500/20 text-blue-100 text-xs font-semibold rounded-full mb-3 border border-blue-500/30">
+                    <div class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-100 text-xs font-semibold rounded-full mb-3 border border-emerald-500/30">
                         🟢 ระบบออนไลน์และใช้งานได้จริง
                     </div>
                     <h1 class="text-3xl md:text-4xl font-bold tracking-tight">KLLC Technical Operations</h1>
@@ -45,6 +42,7 @@
 
     <main class="max-w-6xl mx-auto px-4 py-8 -mt-6">
         
+        <!-- Dashboard Summary -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
                 <p class="text-sm text-slate-500 font-medium mb-1">ครุภัณฑ์ทั้งหมด</p>
@@ -65,11 +63,10 @@
             </div>
         </div>
 
+        <!-- Executive Alert -->
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-8 flex items-start gap-4">
             <div class="bg-amber-100 p-2 rounded-full text-amber-600 mt-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
             </div>
             <div>
                 <h3 class="font-semibold text-amber-800 text-lg">ข้อสังเกตสำหรับผู้บริหาร</h3>
@@ -77,11 +74,12 @@
             </div>
         </div>
 
-        <h2 class="text-xl font-bold text-slate-800 mb-4">📍 จุดบริการทั้งหมด (27 จุด)</h2>
+        <!-- Rooms Grid -->
+        <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+            จุดบริการทั้งหมด (27 จุด)
+        </h2>
         <div id="rooms-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8"></div>
-
-        <h2 class="text-xl font-bold text-slate-800 mb-4">📦 ครุภัณฑ์ในระบบ (387 รายการ)</h2>
-        <div id="equipment-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
 
         <footer class="mt-12 pt-8 border-t border-slate-200 text-center text-slate-500 text-sm pb-8">
             <p>© 2024 KLLC Technical Operations Platform</p>
@@ -91,58 +89,38 @@
     </main>
 
     <script>
+        // ข้อมูลห้องพร้อมไอคอนและสี Gradient (ไม่ต้องใช้รูปภายนอก!)
         const rooms = [
-            { name: "Activity Area VDW", building: "B", floor: "1", capacity: "80-100 คน", img: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop" },
-            { name: "Private Cabin", building: "A", floor: "1", capacity: "8 เตียง", img: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=300&fit=crop" },
-            { name: "Study Room", building: "A", floor: "1", capacity: "8-10 คน (20 ห้อง)", img: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=400&h=300&fit=crop" },
-            { name: "Study Room A204", building: "A", floor: "2", capacity: "8-10 คน", img: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400&h=300&fit=crop" },
-            { name: "Meeting Room 30 Seats", building: "B", floor: "3", capacity: "30 คน", img: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400&h=300&fit=crop" },
-            { name: "Meeting Room", building: "A", floor: "Mezzanine", capacity: "16-20 คน (2 ห้อง)", img: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=400&h=300&fit=crop" },
-            { name: "Computer Room", building: "A", floor: "2", capacity: "70-80 คน (3 ห้อง)", img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop" },
-            { name: "Mac Room", building: "A", floor: "2", capacity: "50 คน", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop" },
-            { name: "Studio & Karaoke", building: "A", floor: "2", capacity: "3-10 คน", img: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=400&h=300&fit=crop" },
-            { name: "Meeting Room 100 Seats", building: "B", floor: "5", capacity: "100-120 คน", img: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=400&h=300&fit=crop" }
-        ];
-
-        const equipmentTypes = [
-            { name: "เครื่องมิกเซอร์ YAMAHA", room: "ห้อง 100 ที่นั่ง", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop" },
-            { name: "โปรเจคเตอร์ EPSON", room: "ห้องประชุม A", img: "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=400&h=300&fit=crop" },
-            { name: "ลำโพง JBL Professional", room: "ห้อง Activity", img: "https://images.unsplash.com/photo-1588508065123-287b28e013da?w=400&h=300&fit=crop" },
-            { name: "คอมพิวเตอร์ Desktop", room: "Computer Room", img: "https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=400&h=300&fit=crop" },
-            { name: "กล้อง DSLR Canon", room: "ห้องสื่อ", img: "https://images.unsplash.com/photo-1606986628253-49a66e9387c0?w=400&h=300&fit=crop" },
-            { name: "iMac Computer", room: "Mac Room", img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop" }
+            { name: "Activity Area VDW", building: "B", floor: "1", capacity: "80-100 คน", icon: "🎭", color: "from-purple-500 to-indigo-600" },
+            { name: "Private Cabin", building: "A", floor: "1", capacity: "8 เตียง", icon: "🛏️", color: "from-amber-500 to-orange-600" },
+            { name: "Study Room", building: "A", floor: "1", capacity: "8-10 คน (20 ห้อง)", icon: "📚", color: "from-emerald-500 to-teal-600" },
+            { name: "Study Room A204", building: "A", floor: "2", capacity: "8-10 คน", icon: "📖", color: "from-emerald-500 to-teal-600" },
+            { name: "Meeting Room 30 Seats", building: "B", floor: "3", capacity: "30 คน", icon: "🎬", color: "from-rose-500 to-pink-600" },
+            { name: "Meeting Room", building: "A", floor: "Mezzanine", capacity: "16-20 คน (2 ห้อง)", icon: "🤝", color: "from-blue-500 to-cyan-600" },
+            { name: "Computer Room", building: "A", floor: "2", capacity: "70-80 คน (3 ห้อง)", icon: "💻", color: "from-slate-600 to-slate-800" },
+            { name: "Mac Room", building: "A", floor: "2", capacity: "50 คน", icon: "🍎", color: "from-gray-400 to-gray-600" },
+            { name: "Studio & Karaoke", building: "A", floor: "2", capacity: "3-10 คน", icon: "🎤", color: "from-fuchsia-500 to-purple-600" },
+            { name: "Meeting Room 100 Seats", building: "B", floor: "5", capacity: "100-120 คน", icon: "🏛️", color: "from-indigo-500 to-blue-700" }
         ];
 
         const roomsContainer = document.getElementById('rooms-container');
-        rooms.forEach((room, index) => {
+        rooms.forEach((room) => {
             roomsContainer.innerHTML += `
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                    <img src="${room.img}" alt="${room.name}" class="equipment-img mb-3">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร ${room.building} ชั้น ${room.floor}</span>
-                        <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">พร้อมใช้งาน 🟢</span>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden card-hover">
+                    <div class="h-32 bg-gradient-to-br ${room.color} flex items-center justify-center text-6xl">
+                        ${room.icon}
                     </div>
-                    <h3 class="font-bold text-slate-800 text-lg mb-1">${room.name}</h3>
-                    <p class="text-sm text-slate-500 mb-3">ความจุ: ${room.capacity}</p>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">อาคาร ${room.buildending} ชั้น ${room.floor}</span>
+                            <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">พร้อมใช้งาน 🟢</span>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-lg mb-1">${room.name}</h3>
+                        <p class="text-sm text-slate-500">ความจุ: ${room.capacity}</p>
+                    </div>
                 </div>
             `;
         });
-
-        const equipmentContainer = document.getElementById('equipment-container');
-        for (let i = 0; i < 387; i++) {
-            const type = equipmentTypes[i % equipmentTypes.length];
-            equipmentContainer.innerHTML += `
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 card-hover">
-                    <img src="${type.img}" alt="${type.name}" class="equipment-img mb-3">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md">${type.room}</span>
-                        <span class="bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full">เฝ้าระวัง 🟡</span>
-                    </div>
-                    <h3 class="font-bold text-slate-800 text-lg mb-1">${type.name} #${i + 1}</h3>
-                    <p class="text-sm text-slate-500 mb-3">รหัส: 57สห990000451116${String(i).padStart(3, '0')}</p>
-                </div>
-            `;
-        }
     </script>
 </body>
 </html>
